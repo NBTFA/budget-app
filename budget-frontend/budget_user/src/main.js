@@ -4,6 +4,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
 import 'font-awesome/css/font-awesome.min.css'
 import axios from 'axios';
+import routes from './router/index.js'
 
 Vue.config.productionTip = false
 
@@ -14,4 +15,5 @@ Vue.prototype.$http = axios;
 
 new Vue({
   render: h => h(App),
+  router: routes
 }).$mount('#app')
