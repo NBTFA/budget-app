@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import axios from 'axios';
 import routes from './router/index.js'
 import store from './store/index.js'
+import './mock'
 
 Vue.config.productionTip = false
 

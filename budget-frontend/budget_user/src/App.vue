@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -13,15 +12,15 @@ export default {
   components: {
     HelloWorld
   },
-  created:function(){
-    this.$http.get('/test?name=12')
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  },
+  // created:function(){
+  //   this.$http.get('/test?name=12')
+  //   .then(function (response) {
+  //     console.log(response.data);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  // },
 }
 </script>
 
