@@ -36,6 +36,11 @@
         console.log('登录信息：', this.loginForm);
         this.$http.post('/login', this.loginForm).then((res) => {
           console.log('登录结果：', res);
+          if (res.data.status === 200) {
+            this.$router.push('/home');
+          } else {
+            this.$message.error(res.data.message);
+          }
         });
       },
       onRegister() {
