@@ -9,12 +9,15 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    @Select("select * from user")
+    @Select("select * from users")
     public List<User> findAll();
 
-    @Insert("insert into user values (#{id}, #{username}, #{password})")
+    @Insert("insert into users values (#{id}, #{username}, #{password}, #{email})")
     public int insert(User user);
 
-    @Select("select * from user where username = #{username} and password = #{password}")
+    @Select("select * from users where username = #{username} and password = #{password}")
     public User login(User user);
+
+    @Select("select * from users where username = #{username}")
+    public User selectByUsername(String username);
 }

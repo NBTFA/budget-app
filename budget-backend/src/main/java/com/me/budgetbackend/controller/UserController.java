@@ -3,6 +3,7 @@ package com.me.budgetbackend.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.me.budgetbackend.entity.User;
+import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.UserMapper;
 import com.me.budgetbackend.mapper.UserMapper_plus;
 import com.me.budgetbackend.service.UserService;
@@ -29,13 +30,25 @@ public class UserController {
     @PostMapping("/login")
     public Result login(@RequestBody User user)
     {
-        if(userService.Login(user))
-        {
-            String token = JwtUtils.generateToken(user.getUsername());
-            return Result.ok().data("token", token);
+        try {
+            userService.login(user);
+        } catch (UserNotFoundException e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
         }
-        else
-            return Result.error();
+        String token = JwtUtils.generateToken(user.getUsername());
+        return Result.ok().data("token", token);
+    }
+
+    @PostMapping("/register")
+    public Result register(@RequestBody User user)
+    {
+        try {
+            userService.register(user);
+        } catch (UserNotFoundException e) {
+            return Result.error(ResultCode.USER_ALREADY_EXISTS);
+        }
+        String token = JwtUtils.generateToken(user.getUsername());
+        return Result.ok().data("token", token);
     }
 
     @GetMapping("/user")

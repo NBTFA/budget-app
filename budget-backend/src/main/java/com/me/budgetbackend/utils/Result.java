@@ -23,10 +23,10 @@ public class Result {
         return result;
     }
 
-    public static Result error() {
+    public static Result error(int resultCode) {
         Result result = new Result();
         result.setSuccess(false);
-        result.setCode(ResultCode.ERROR);
+        result.setCode(resultCode);
         result.setMessage("失败");
         return result;
     }
