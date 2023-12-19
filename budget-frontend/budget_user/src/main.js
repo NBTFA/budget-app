@@ -2,7 +2,7 @@ import Vue from 'vue'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue'
-import 'font-awesome/css/font-awesome.min.css'
+import '@fortawesome/fontawesome-free/css/all.css';
 import axios from 'axios';
 import routes from './router/index.js'
 import store from './store/index.js'

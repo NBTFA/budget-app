@@ -17,13 +17,12 @@ public class UserService {
             throw new UserNotFoundException("未找到用户");
     }
 
-    public Boolean register(User user)
+    public void register(User user)
     {
         User user1 = userMapper.selectByUsername(user.getUsername());
         if(user1 == null)
         {
             userMapper.insert(user);
-            return true;
         }
         else
             throw new UserAlreadyExistException("用户已存在");
