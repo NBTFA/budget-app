@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
+    HelloWorld,
   },
   // created:function(){
   //   this.$http.get('/test?name=12')
@@ -21,7 +21,7 @@ export default {
   //     console.log(error);
   //   });
   // },
-}
+};
 </script>
 
 <style>
