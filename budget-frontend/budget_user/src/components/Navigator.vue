@@ -1,10 +1,10 @@
 <template>
-  <el-menu mode="horizontal">
-    <el-menu-item index="1" @click="onClickMainMenu">首页</el-menu-item>
-    <el-menu-item index="2" @click="onClickTodoList">待办事项</el-menu-item>
-    <el-menu-item index="3" @click="onClickHistory">消费记录</el-menu-item>
-    <el-menu-item index="4" @click="onClickRank">排行榜</el-menu-item>
-    <el-menu-item index="5" @click="onClickReport">个人报告</el-menu-item>
+  <el-menu mode="horizontal" :default-active="activeIndex">
+      <el-menu-item index="1" @click="onClickMainMenu">首页</el-menu-item>
+      <el-menu-item index="2" @click="onClickTodoList">待办事项</el-menu-item>
+      <el-menu-item index="3" @click="onClickHistory">消费记录</el-menu-item>
+      <el-menu-item index="4" @click="onClickRank">排行榜</el-menu-item>
+      <el-menu-item index="5" @click="onClickReport">个人报告</el-menu-item>
     <!-- 其他菜单项 -->
     <div class="menu-right">
       <MentionIcon></MentionIcon>
@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import MentionIcon from "./MentionIcon.vue";
-import ContinueIcon from "./ContinueIcon.vue";
+import MentionIcon from "./HomePage/MentionIcon.vue";
+import ContinueIcon from "./HomePage/ContinueIcon.vue";
 export default {
   name: "Navigator",
   components: { MentionIcon, ContinueIcon },
@@ -62,6 +62,24 @@ export default {
       this.$router.push("/report");
     },
   },
+  computed: {
+    activeIndex() {
+      switch (this.$route.path) {
+        case "/home":
+          return "1";
+        case "/todo":
+          return "2";
+        case "/history":
+          return "3";
+        case "/rank":
+          return "4";
+        case "/report":
+          return "5";
+        default:
+          return "1";
+      }
+    },
+  },
 };
 </script>
 
@@ -70,4 +88,5 @@ export default {
 .fa-bell:hover {
   color: #409eff;
 }
+
 </style>

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import MentionItem from "./MentionItem.vue";
+import MentionItem from "../HomePage/MentionItem.vue";
 export default {
   name: "MentionIcon",
   components: { MentionItem },
