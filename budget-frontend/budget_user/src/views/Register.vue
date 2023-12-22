@@ -58,6 +58,10 @@ export default {
         if (res.data.status === 20000) {
           this.$message.success("注册成功");
           this.$router.push("/home");
+          if (res.data.data.token) {
+            localStorage.setItem("token", res.data.data.token);
+            this.$store.commit("setToken", res.data.data.token);
+          }
         } else {
           this.$message.error(res.data.message);
         }

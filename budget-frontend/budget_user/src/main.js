@@ -14,6 +14,30 @@ Vue.use(ElementUI);
 
 axios.defaults.baseURL = 'http://localhost:8088';
 Vue.prototype.$http = axios;
+axios.interceptors.response.use(request => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    request.headers.Authorization = token;
+  }
+  console.log('request', request);
+  return request;
+});
+
+store.dispatch('loadToken');
+console.log('store', store);
+
+routes.beforeEach((to, from, next) => {
+  if (to.path === '/login' || to.path === '/register') {
+      next();
+  } else {
+      const token = localStorage.getItem('token');
+      if (token) {
+          next();
+      } else {
+          next('/login');
+      }
+  }
+});
 
 new Vue({
   render: h => h(App),

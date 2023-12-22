@@ -39,13 +39,13 @@ export default {
     },
     // 从父组件接收已完成事项的日期
     completedDate: {
-      type: Date,
+      type: String,
       default: () => null, // 默认为 null，表示未完成
     },
   },
   data() {
     return {
-      checked: false,
+      checked: this.completedDate!==null,
       dialogVisible: false,
       datePickerModel: null, // 用户在日期选择器中选择的日期
       localCompletedDate: this.completedDate, // 本地状态

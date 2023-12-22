@@ -38,6 +38,10 @@
           console.log('登录结果：', res);
           if (res.data.status === 20000) {
             this.$router.push('/home');
+            if(res.data.data.token) {
+              localStorage.setItem('token', res.data.data.token);
+              this.$store.commit('setToken', res.data.data.token);
+            }
           } else {
             this.$message.error(res.data.message);
           }

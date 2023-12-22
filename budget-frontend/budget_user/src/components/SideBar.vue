@@ -25,39 +25,7 @@
     },
     data() {
       return {
-        rankUsers: [
-            {
-                "username": "user1",
-                "rank": 1,
-                "continuousRecord": 2
-            },
-            {
-                "username": "user1",
-                "rank": 2,
-                "continuousRecord": 2
-            },
-            {
-                "username": "user1",
-                "rank": 3,
-                "continuousRecord": 2
-            },
-            {
-                "username": "user1",
-                "rank": 4,
-                "continuousRecord": 2
-            },
-            {
-                "username": "user1",
-                "rank": 5,
-                "continuousRecord": 2
-            },
-            {
-                "username": "user1",
-                "rank": 6,
-                "continuousRecord": 2
-            }
-          // ... your users data here ...
-        ],
+        rankUsers: [],
       };
     },
     computed: {
@@ -65,6 +33,16 @@
         // Returns only the first 5 users
         return this.rankUsers.slice(0, 5);
       }
+    },
+    created: function() {
+      this.$http.get("/user/rankList").then((res) => {
+        console.log("获取用户排名：", res);
+        if (res.data.status === 20000) {
+          this.rankUsers = res.data.data.rankUsers;
+        } else {
+          this.$message.error(res.data.message);
+        }
+      })
     }
   };
   </script>
