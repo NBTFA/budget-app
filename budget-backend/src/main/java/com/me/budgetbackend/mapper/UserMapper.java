@@ -12,7 +12,7 @@ public interface UserMapper {
     @Select("select * from users")
     public List<User> findAll();
 
-    @Insert("insert into users values (#{id}, #{username}, #{password}, #{email})")
+    @Insert("INSERT INTO users (username, password, email, avatar, created_at) VALUES (#{username}, #{password}, #{email}, #{avatar}, #{created_at})")
     public int insert(User user);
 
     @Select("select * from users where username = #{username} and password = #{password}")
@@ -20,4 +20,7 @@ public interface UserMapper {
 
     @Select("select * from users where username = #{username}")
     public User selectByUsername(String username);
+
+    @Select("select * from users where id = #{id}")
+    public User selectById(Integer id);
 }

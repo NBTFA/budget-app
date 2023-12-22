@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.me.budgetbackend.entity.User;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
+import com.me.budgetbackend.mapper.ContinuousRecordMapper;
 import com.me.budgetbackend.mapper.UserMapper;
 import com.me.budgetbackend.mapper.UserMapper_plus;
 import com.me.budgetbackend.service.UserService;
@@ -11,14 +12,13 @@ import com.me.budgetbackend.utils.JwtUtils;
 import com.me.budgetbackend.utils.Result;
 import com.me.budgetbackend.utils.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserMapper userMapper;
@@ -26,6 +26,8 @@ public class UserController {
     private UserMapper_plus userMapperPlus;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ContinuousRecordMapper continuousRecordMapper;
 
     @PostMapping("/login")
     public Result login(@RequestBody User user)
@@ -51,16 +53,28 @@ public class UserController {
         return Result.ok().data("token", token);
     }
 
-    @GetMapping("/user")
-    public String query()
+    @GetMapping("/avatar")
+    public Result getAvatar(@RequestHeader("Authorization") String token)
     {
-        List<User> list = userMapper.findAll();
-        System.out.println(list);
-        return "查询用户";
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        return Result.ok().data("avatar", user.getAvatar());
+    }
+
+    @GetMapping("/rankList")
+    public Result getRankList()
+    {
+        List<User> usersList = new ArrayList<>();
+        Integer[] users =  continuousRecordMapper.selectTopFiveUserId();
+        for(int user: users)
+        {
+            usersList.add(userMapper.selectById(user));
+        }
+        return Result.ok().data("usersList", usersList);
     }
 
     //分页查询
-    @GetMapping("/user/findByPage")
+    @GetMapping("/findByPage")
     public IPage findByPage()
     {
         //设置起始值页和每页数据数量
@@ -69,15 +83,4 @@ public class UserController {
         return iPage;
     }
 
-    @PostMapping("/user")
-    public String save(User user)
-    {
-        int i = userMapper.insert(user);
-        if(i>0)
-        {
-            return "success";
-        }
-        else
-            return "fail";
-    }
 }

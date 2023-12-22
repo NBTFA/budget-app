@@ -53,9 +53,9 @@ export default {
     onRegister() {
       console.log("注册信息：", this.registerForm);
       // 这里可以添加注册逻辑
-      this.$http.post("/register", this.registerForm).then((res) => {
+      this.$http.post("/user/register", this.registerForm).then((res) => {
         console.log("注册结果：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.$message.success("注册成功");
           this.$router.push("/home");
           if (res.data.data.token) {

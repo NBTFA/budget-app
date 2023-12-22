@@ -34,9 +34,10 @@
     methods: {
       onLogin() {
         console.log('登录信息：', this.loginForm);
-        this.$http.post('/login', this.loginForm).then((res) => {
+        this.$http.post('/user/login', this.loginForm).then((res) => {
           console.log('登录结果：', res);
-          if (res.data.status === 20000) {
+          if (res.data.code === 20000) {
+            console.log('登录跳转');
             this.$router.push('/home');
             if(res.data.data.token) {
               localStorage.setItem('token', res.data.data.token);

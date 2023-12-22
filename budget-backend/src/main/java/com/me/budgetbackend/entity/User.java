@@ -11,10 +11,28 @@ import javax.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String email;
+    private String avatar;
+    private String created_at;
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public String getEmail() {
         return email;
@@ -22,13 +40,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getUsername() {
