@@ -12,31 +12,10 @@
       <side-bar></side-bar>
       <!-- 主内容区 -->
       <el-main>
-        <el-row :gutter="20">
-          <!-- 图表卡片 -->
-          <el-col :span="12">
-            <el-card>
-              <!-- 在这里插入饼状图 -->
-            </el-card>
-            <el-card>
-              <!-- 在这里插入柱状图 -->
-            </el-card>
-          </el-col>
-
-          <!-- 表格和Todo列表 -->
-          <el-col :span="12">
-            <el-card>
-              <el-table :data="tableData">
-                <!-- 表格列 -->
-              </el-table>
-            </el-card>
-            <el-card>
-              <div v-for="(todo, index) in todos" :key="index">
-                <el-checkbox v-model="todo.done">{{ todo.text }}</el-checkbox>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+        <div class="chartSection"></div>
+        <div class="tableSection">
+          <budget-table></budget-table>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -45,6 +24,7 @@
   <script>
 import Navigator from "@/components/Navigator.vue";
 import SideBar from "@/components/SideBar.vue";
+import BudgetTable from "@/components/BudgetTable.vue";
 
 export default {
   data() {
@@ -57,7 +37,7 @@ export default {
       ],
     };
   },
-  components: { Navigator, SideBar },
+  components: { Navigator, SideBar, BudgetTable },
   methods: {
     // 在这里添加方法
   },
@@ -65,6 +45,14 @@ export default {
 </script>
   
   <style>
+.chartSection {
+  height: 50%;
+}
+
+.tableSection {
+  height: 50%;
+}
+
 .menu-right {
   float: right;
   display: flex; /* 使用flex布局可以更容易地控制间距 */
@@ -83,6 +71,5 @@ export default {
 .el-menu-item:not(:last-child) {
   margin-right: 30px;
 }
-
 </style>
   

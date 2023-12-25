@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
-// //拦截/login post请求,返回模拟数据,指定httpstatus为200
-// Mock.mock('http://localhost:8088/login', 'post', {
+//拦截/login post请求,返回模拟数据,指定httpstatus为200
+// Mock.mock('http://localhost:8088/user/login', 'post', {
 //     "status": 20000,
 //     "data": {
 //         "id": "@id",
@@ -10,11 +10,11 @@ import Mock from 'mockjs'
 //         "role": 0,
 //         "createTime": "@datetime",
 //         "updateTime": "@datetime",
-//         "token" : ""
+//         "token" : "dmwklqd"
 //     }
 // })
 // //拦截/register post请求,返回模拟数据,指定httpstatus为200
-// Mock.mock('http://localhost:8088/register', 'post', {
+// Mock.mock('http://localhost:8088/user/register', 'post', {
 //     "status": 20000,
 //     "data": {
 //         "id": "@id",
