@@ -17,6 +17,24 @@ public class User {
     private String email;
     private String avatar;
     private String created_at;
+    private Integer total_budget;
+    private Integer used_budget;
+
+    public Integer getTotal_budget() {
+        return total_budget;
+    }
+
+    public void setTotal_budget(Integer total_budget) {
+        this.total_budget = total_budget;
+    }
+
+    public Integer getUsed_budget() {
+        return used_budget;
+    }
+
+    public void setUsed_budget(Integer used_budget) {
+        this.used_budget = used_budget;
+    }
 
     public Long getId() {
         return id;

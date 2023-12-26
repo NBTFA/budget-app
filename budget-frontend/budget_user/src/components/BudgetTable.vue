@@ -115,7 +115,7 @@ export default {
     };
   },
   created() {
-    this.$http.get("/user/budgetList").then((res) => {
+    this.$http.get("/user/budget/all").then((res) => {
       console.log("获取用户预算：", res);
       if (res.data.status === 20000) {
         this.tableData = res.data.data.budgetList;
