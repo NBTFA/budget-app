@@ -99,3 +99,55 @@ Mock.mock('http://localhost:8088/user/todoList', 'get', {
         ]
     }
 })
+//拦截/user/budget/progress get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/budget/progress', 'get', {
+    "status": 20000,
+    "data": {
+        "progress": "@integer(0,100)",
+    }
+})
+//拦截/user/budget?frame=year get请求,返回模拟数据,指定httpstatus为20000
+//格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
+    "status": 20000,
+    "data": {
+        "budgetList|10": [
+            {
+                "date": "@date('yyyy-MM')",
+                "name": "@cname",
+                "category": "@cname",
+                "amount": "@integer(0,100)",
+                "income": "@boolean"
+            }
+        ]
+    }
+})
+//拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
+//格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
+    "status": 20000,
+    "data": {
+        "budgetList|10": [
+            {
+                "date": "@date('yyyy-MM-dd')",
+                "name": "@cname",
+                "category": "@cname",
+                "amount": "@integer(0,100)",
+                "income": "@boolean"
+            }
+        ]
+    }
+})
+//拦截/user/budget/pieChart get请求,返回模拟数据,指定httpstatus为20000
+//{ name: "餐饮", value: 100 }
+Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
+    "status": 20000,
+    "data": {
+        "pieChart|10": [
+            {
+                "name": "@cname",
+                "value": "@integer(0,100)",
+            }
+        ]
+    }
+})

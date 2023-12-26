@@ -5,13 +5,15 @@
       <el-header>
         <navigator></navigator>
       </el-header>
+      <time-line-section></time-line-section>
     </el-container>
 </template>
 
 <script>
 import Navigator from "../components/Navigator.vue";
+import TimeLineSection from "@/components/HomePage/TimeLineSection.vue";
 export default {
     name: "Report",
-    components: { Navigator },
+    components: { Navigator, TimeLineSection },
 }
 </script>

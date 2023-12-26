@@ -12,7 +12,9 @@
       <side-bar></side-bar>
       <!-- 主内容区 -->
       <el-main>
-        <div class="chartSection"></div>
+        <div class="chartSection">
+          <budget-info></budget-info>
+        </div>
         <div class="tableSection">
           <budget-table></budget-table>
         </div>
@@ -25,19 +27,15 @@
 import Navigator from "@/components/Navigator.vue";
 import SideBar from "@/components/SideBar.vue";
 import BudgetTable from "@/components/BudgetTable.vue";
+import BudgetInfo from "@/components/BudgetInfo.vue";
 
 export default {
   data() {
     return {
-      tableData: [
-        // 表格数据
-      ],
-      todos: [
-        // Todo列表数据
-      ],
+      // 在这里添加数据
     };
   },
-  components: { Navigator, SideBar, BudgetTable },
+  components: { Navigator, SideBar, BudgetTable, BudgetInfo },
   methods: {
     // 在这里添加方法
   },
@@ -46,11 +44,13 @@ export default {
   
   <style>
 .chartSection {
-  height: 50%;
+  overflow-y: auto;
+  max-height: 70%;
 }
 
 .tableSection {
-  height: 50%;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .menu-right {
