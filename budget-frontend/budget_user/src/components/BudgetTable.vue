@@ -45,7 +45,7 @@
             <el-form-item label="Tags">
               <el-tag v-for="tag in props.row.tags" :key="tag">
                 {{ tag }}
-                </el-tag>
+              </el-tag>
             </el-form-item>
           </el-form>
         </template>
@@ -114,6 +114,16 @@ export default {
       filteredByDateData: [],
     };
   },
+  created() {
+    this.$http.get("/user/budgetList").then((res) => {
+      console.log("获取用户预算：", res);
+      if (res.data.status === 20000) {
+        this.tableData = res.data.data.budgetList;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
+  },
   computed: {
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.tableData;
@@ -168,18 +178,18 @@ export default {
 </script>
   
   <style>
-  .table-expand {
-    font-size: 0;
-  }
-  .table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
+.table-expand {
+  font-size: 0;
+}
+.table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 
 .search-area {
   display: flex;
