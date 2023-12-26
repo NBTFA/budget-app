@@ -28,11 +28,11 @@ export default {
   },
   methods: {
     getMention() {
-      this.$http.get("/user/mention").then((res) => {
+      this.$http.get("/user/notification").then((res) => {
         console.log("获取提醒：", res);
         if (res.data.status === 20000) {
-          this.mentionNum = res.data.data.mention;
-          this.mention = res.data.data.mentionList;
+          this.mentionNum = res.data.data.notificationNum;
+          this.mention = res.data.data.notifications;
         } else {
           this.$message.error(res.data.message);
         }

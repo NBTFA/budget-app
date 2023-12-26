@@ -37,8 +37,8 @@ Mock.mock('http://localhost:8088/user/avatar', 'get', {
 Mock.mock('http://localhost:8088/user/mention', 'get', {
     "status": 20000,
     "data": {
-        "mention": "@integer(0,100)",
-        "mentionList": [
+        "notificationNum": "@integer(0,100)",
+        "notifications": [
             {
                 "title": "大便",
                 "content": "你有一份没吃的大便23232323",

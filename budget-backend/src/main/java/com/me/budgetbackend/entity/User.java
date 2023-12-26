@@ -18,6 +18,14 @@ public class User {
     private String avatar;
     private String created_at;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getCreated_at() {
         return created_at;
     }

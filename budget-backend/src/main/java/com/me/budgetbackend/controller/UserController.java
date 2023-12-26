@@ -2,6 +2,7 @@ package com.me.budgetbackend.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.me.budgetbackend.entity.Notification;
 import com.me.budgetbackend.entity.User;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.ContinuousRecordMapper;
@@ -21,13 +22,9 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserMapper userMapper;
-    @Autowired
     private UserMapper_plus userMapperPlus;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ContinuousRecordMapper continuousRecordMapper;
 
     @PostMapping("/login")
     public Result login(@RequestBody User user)
@@ -56,21 +53,55 @@ public class UserController {
     @GetMapping("/avatar")
     public Result getAvatar(@RequestHeader("Authorization") String token)
     {
-        String username = JwtUtils.getClaimsByToken(token).getSubject();
-        User user = userMapper.selectByUsername(username);
-        return Result.ok().data("avatar", user.getAvatar());
+        try{
+            return Result.ok().data("avatar", userService.getAvatar(token));
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
     }
 
     @GetMapping("/rankList")
-    public Result getRankList()
+    public Result getRankList(@RequestHeader("Authorization") String token)
     {
-        List<User> usersList = new ArrayList<>();
-        Integer[] users =  continuousRecordMapper.selectTopFiveUserId();
-        for(int user: users)
-        {
-            usersList.add(userMapper.selectById(user));
+        try{
+            return Result.ok().data("rankUsers", userService.getRankList(token));
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
         }
-        return Result.ok().data("usersList", usersList);
+    }
+
+    @GetMapping("/todoList")
+    public Result getTodoList(@RequestHeader("Authorization") String token)
+    {
+        try{
+            return Result.ok().data("todoList", userService.getTodoList(token));
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/continue")
+    public Result getContinue(@RequestHeader("Authorization") String token)
+    {
+        try{
+            return Result.ok().data("continue", userService.getContinue(token));
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/notification")
+    public Result getNotification(@RequestHeader("Authorization") String token)
+    {
+        try{
+            Result result = Result.ok();
+            List<Notification> notifications = userService.getNotification(token);
+            result.data("notifications", notifications);
+            result.data("notificationNum", notifications.size());
+            return result;
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
     }
 
     //分页查询
