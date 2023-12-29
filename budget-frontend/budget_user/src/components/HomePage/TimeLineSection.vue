@@ -41,6 +41,9 @@ export default {
         console.error(err);
       });
     },
+    showDetails(point) {
+      this.$message.info(`${point.name}：${point.value}元`);
+    },
   },
   created() {
     this.processData();
