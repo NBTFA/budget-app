@@ -34,7 +34,7 @@ Mock.mock('http://localhost:8088/user/avatar', 'get', {
     }
 })
 //拦截/user/mention get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/mention', 'get', {
+Mock.mock('http://localhost:8088/user/notification', 'get', {
     "status": 20000,
     "data": {
         "notificationNum": "@integer(0,100)",
@@ -150,4 +150,27 @@ Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
             }
         ]
     }
+})
+//拦截/user/todo/add post请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/todo', 'post', {
+    "status": 20000,
+})
+//拦截/user/todo get请求,返回模拟数据,指定httpstatus为20000
+//格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true}
+Mock.mock('http://localhost:8088/user/todo', 'get', {
+    "status": 20000,
+    "data": {
+        "todos|10": [
+            {
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            }
+        ]
+    }
+})
+//拦截/user/todo delete请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/todo', 'delete', {
+    "status": 20000,
 })
