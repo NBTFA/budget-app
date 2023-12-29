@@ -7,8 +7,10 @@
           <todo-item
             v-for="(todo, index) in todos"
             :key="index"
-            :description="todo.description"
-            :completedDate="todo.completedDate"
+            :description="todo.title"
+            :date="todo.time"
+            :isCompleted="todo.completed"
+            :id="todo.id"
           ></todo-item>
         </div>
       </el-col>
@@ -30,10 +32,10 @@ export default {
     };
   },
   created: function() {
-    this.$http.get("/user/todoList").then((res) => {
+    this.$http.get("/user/todo").then((res) => {
         console.log("获取用户排名：", res);
         if (res.data.status === 20000) {
-          this.todos = res.data.data.todoList;
+          this.todos = res.data.data.todos;
         } else {
           this.$message.error(res.data.message);
         }

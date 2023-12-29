@@ -8,19 +8,13 @@
     <span :class="['description', { 'is-complete': checked }]">{{
       description
     }}</span>
-    <span class="date" v-if="checked">{{ formatDate(completedDate) }}</span>
+    <span class="date">{{ formatDate(date) }}</span>
     <el-dialog
-      title="选择完成日期"
+      title="是否确定选择完成？"
       :visible.sync="dialogVisible"
       width="30%"
-      @close="onDialogClose"
     >
-      <el-date-picker
-        v-model="datePickerModel"
-        type="date"
-        placeholder="选择日期"
-        value-format="yyyy-MM-dd"
-      ></el-date-picker>
+      <p>完成后不可更改！</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="submitCompleted">确定</el-button>
@@ -37,17 +31,26 @@ export default {
       type: String,
       required: true,
     },
-    // 从父组件接收已完成事项的日期
-    completedDate: {
+    // 从父组件接收日期
+    date: {
       type: String,
-      default: () => null, // 默认为 null，表示未完成
+      required: true,
+    },
+    // 从父组件接受是否完成
+    isCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    // 从父组件接收待办事项的id
+    id: {
+      type: String,
+      required: true,
     },
   },
   data() {
     return {
-      checked: this.completedDate!==null,
+      checked: this.isCompleted == false,
       dialogVisible: false,
-      datePickerModel: null, // 用户在日期选择器中选择的日期
       localCompletedDate: this.completedDate, // 本地状态
     };
   },
@@ -68,18 +71,20 @@ export default {
       return `${d.getFullYear()}|${d.getMonth() + 1}|${d.getDate()}`;
     },
     submitCompleted() {
-      if (this.datePickerModel) {
-        this.completedDate = this.datePickerModel;
-        // TODO: 提交完成的事项到后端
-        this.checked = true; // 确保勾选框被选中
-      }
+      this.$http
+        .patch(`/user/todo/${this.id}`, {
+          completed: true,
+          completedDate: new Date().toISOString(),
+        }).then((res) => {
+          console.log("添加待办事项：", res);
+          if (res.data.status === 20000) {
+            this.$message.success("添加成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
+      this.checked = true; // 确保勾选框被选中
       this.dialogVisible = false;
-    },
-    onDialogClose() {
-      // 如果没有选择日期，取消勾选复选框
-      if (!this.datePickerModel) {
-        this.checked = false;
-      }
     },
   },
 };

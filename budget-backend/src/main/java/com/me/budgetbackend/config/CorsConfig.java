@@ -12,7 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
     {
         registry.addMapping("/**") //允许跨域访问的路径
                 .allowedOrigins("http://localhost:8080") //允许跨域访问的源
-                .allowedMethods("POST", "GET", "PUT", "DELETE") //请求方法
+                .allowedMethods("POST", "GET", "PUT", "DELETE", "PATCH") //请求方法
                 .maxAge(178000) //预检间隔时间
                 .allowedHeaders("*") //请求头设置
                 .allowCredentials(true); //是否发送cookie

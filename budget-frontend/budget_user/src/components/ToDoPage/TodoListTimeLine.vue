@@ -36,7 +36,7 @@
         ></el-empty>
         <el-timeline-item
           v-for="(item, index) in todoItems"
-          :key="index"
+          :key="item.id"
           :timestamp="item.time"
           placement="top"
           :color="item.completed ? 'green' : 'gray'"
@@ -49,12 +49,34 @@
               <h4>{{ item.title }}</h4>
               <p>{{ item.content }}</p>
             </div>
+            <div class="completeButton">
+              <el-button
+                type="success"
+                v-if="!item.completed"
+                @click="prepareCompletion(index)"
+                >完成</el-button
+              >
+            </div>
+            <el-dialog
+              title="是否确定选择完成？"
+              :visible.sync="completeDialogVisible"
+              width="30%"
+            >
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="completeDialogVisible = false"
+                  >取消</el-button
+                >
+                <el-button type="primary" @click="onConfirmComplete()"
+                  >确定</el-button
+                >
+              </span>
+            </el-dialog>
             <el-button
               type="text"
               class="delete-button"
               @click="confirmDeletion(index)"
             >
-              <i class="fas fa-trash-alt"></i>
+              <i class="fas fa-trash-alt fa-2x"></i>
             </el-button>
           </el-card>
         </el-timeline-item>
@@ -70,11 +92,14 @@ export default {
     return {
       todoItems: [],
       dialogVisible: false,
+      completeDialogVisible: false,
       todoItem: {
         title: "",
         content: "",
         date: "",
+        id: "",
       },
+      activeItemIndex: null,
     };
   },
   created() {
@@ -88,6 +113,30 @@ export default {
     });
   },
   methods: {
+    prepareCompletion(index) {
+      this.activeItemIndex = index;
+      this.completeDialogVisible = true;
+    },
+    onConfirmComplete() {
+      this.completeDialogVisible = false;
+      if (this.activeItemIndex !== null) {
+        this.todoItems[this.activeItemIndex].completed = true;
+        console.log("选择id是：" + this.todoItems[this.activeItemIndex].id);
+        this.$http
+          .patch(`/user/todo/${this.todoItems[this.activeItemIndex].id}`, {
+            completed: true,
+            completedDate: new Date().toISOString(),
+          })
+          .then((res) => {
+            console.log("完成待办事项：", res);
+            if (res.data.status === 20000) {
+              this.$message.success("添加成功");
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
+      }
+    },
     disabledBeforeToday(date) {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -106,21 +155,23 @@ export default {
           console.log("添加待办事项：", res);
           if (res.data.status === 20000) {
             this.$message.success("添加成功");
+            this.todoItem.id = res.data.id;
+            this.todoItems.push({
+              id: this.todoItem.id,
+              title: this.todoItem.title,
+              content: this.todoItem.content,
+              time: this.todoItem.date,
+              completed: false,
+            });
+            this.todoItem = {
+              title: "",
+              content: "",
+              date: "",
+            };
           } else {
             this.$message.error(res.data.message);
           }
         });
-      this.todoItems.push({
-        title: this.todoItem.title,
-        content: this.todoItem.content,
-        time: this.todoItem.date,
-        completed: false,
-      });
-      this.todoItem = {
-        title: "",
-        content: "",
-        date: "",
-      };
     },
     confirmDeletion(index) {
       this.$confirm("你确定要删除该待办事项吗？", "警告", {

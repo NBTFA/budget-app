@@ -122,9 +122,9 @@ Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
         ]
     }
 })
-//拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
+//拦截/user/budget/allget请求,返回模拟数据,指定httpstatus为20000
 //格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
-Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
+Mock.mock('http://localhost:8088/user/budget/all', 'get', {
     "status": 20000,
     "data": {
         "budgetList|10": [
@@ -154,23 +154,37 @@ Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
 //拦截/user/todo/add post请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'post', {
     "status": 20000,
+    "id": "@id"
 })
 //拦截/user/todo get请求,返回模拟数据,指定httpstatus为20000
-//格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true}
+//格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true, id: 1}
 Mock.mock('http://localhost:8088/user/todo', 'get', {
     "status": 20000,
     "data": {
-        "todos|10": [
+        "todos": [
             {
+                "id": "1",
                 "time": "@date('yyyy-MM-dd')",
                 "title": "@cname",
                 "content": "@cname",
                 "completed": "@boolean"
-            }
+            },
+            {
+                "id": "2",
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            },
         ]
     }
 })
 //拦截/user/todo delete请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'delete', {
+    "status": 20000,
+})
+//拦截/user/todo/{id} patch请求,返回模拟数据,指定httpstatus为20000
+//id为todo的id，使用正则表达式匹配
+Mock.mock(/http:\/\/localhost:8088\/user\/todo\/\d+/, 'patch', {
     "status": 20000,
 })
