@@ -17,7 +17,6 @@
         class="date-picker"
       ></el-date-picker>
     </div>
-
     <!-- 表格 -->
     <el-table :data="filteredData" style="width: 100%">
       <!-- 展开列 -->
@@ -86,7 +85,24 @@
           >
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="100">
+        <template slot-scope="scope">
+          <el-button type="danger" size="small" @click="confirmDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
+    <el-dialog
+      title="确认删除"
+      :visible.sync="dialogVisible"
+      width="30%"
+      @close="resetDeleteConfirmation"
+    >
+      <span>确定要删除这项记录吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleDelete">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
   
@@ -112,21 +128,29 @@ export default {
       searchText: "",
       selectedDate: "",
       filteredByDateData: [],
+      dialogVisible: false, // 控制对话框显示
+      deleteIndex: null, // 要删除的行的索引
+      deleteRow: null, // 要删除的行的数据
     };
   },
   created() {
     this.$http.get("/user/budget/all").then((res) => {
-      console.log("获取用户预算：", res);
+      console.log("获取预算：", res);
       if (res.data.status === 20000) {
-        this.tableData = res.data.data.budgetList;
+        this.$store.commit("setBudgets", res.data.data.budgetList);
+        this.tableData = this.getBudgets();
       } else {
         this.$message.error(res.data.message);
       }
     });
   },
   computed: {
+    budgets() {
+        return this.$store.state.budgets;
+    },
     filteredData() {
-      let data = this.selectedDate ? this.filteredByDateData : this.tableData;
+      let data = this.selectedDate ? this.filteredByDateData : this.budgets;
+      console.log("data", data);
       if (this.searchText) {
         return data.filter(
           (item) =>
@@ -145,6 +169,43 @@ export default {
     },
   },
   methods: {
+    getBudgets() {
+      return this.$store.state.budgets;
+    },
+    // 弹出删除确认对话框
+    confirmDelete(index, row) {
+      this.dialogVisible = true;
+      this.deleteIndex = index;
+      this.deleteRow = row;
+    },
+
+    // 处理删除操作
+    handleDelete() {
+      this.tableData.splice(this.deleteIndex, 1);
+      // 这里可以添加与服务器的交互逻辑
+      this.$http.delete("/user/budget", {
+        params: {
+          id: this.deleteRow.id,
+        },
+      }).then((res) => {
+        console.log("删除预算：", res);
+        if (res.data.status === 20000) {
+          this.$message.success("删除成功");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
+      console.log(`删除了行: ${this.deleteRow.name}`);
+      this.resetDeleteConfirmation();
+      this.$store.commit("setBudgets", this.tableData);
+    },
+
+    // 重置删除确认
+    resetDeleteConfirmation() {
+      this.dialogVisible = false;
+      this.deleteIndex = null;
+      this.deleteRow = null;
+    },
     filterByDate() {
       if (this.selectedDate) {
         this.filteredByDateData = this.tableData.filter(

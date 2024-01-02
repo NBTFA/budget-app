@@ -7,6 +7,7 @@ import Todo from "../views/Todo.vue";
 import History from "../views/History.vue";
 import Rank from "../views/Rank.vue";
 import Report from "../views/Report.vue";
+import store from "@/store";
 // import 组件 from 路径 ../components/组件.vue
 
 Vue.use(VueRouter);
@@ -28,7 +29,7 @@ const routes = new VueRouter({
         },
         {
             path: '/home',
-            component: Home
+            component: Home,
         },
         {
             path: '/todo',
