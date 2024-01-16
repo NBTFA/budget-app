@@ -13,6 +13,7 @@
         <el-avatar icon="el-icon-user-solid" :size="50" :src="url"></el-avatar>
       </span>
       <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="setting">设置</el-dropdown-item>
         <el-dropdown-item divided command="logout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -72,6 +73,11 @@ export default {
         //清除本地存储
         this.$store.commit('deleteToken');
         localStorage.removeItem('token');
+      }
+      else if(command === 'setting') {
+        // 执行设置操作
+        console.log('设置操作');
+        this.$router.push('/setting');
       }
     },
   },
