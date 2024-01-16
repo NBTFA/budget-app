@@ -122,6 +122,22 @@ Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
         ]
     }
 })
+//拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
+//格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
+    "status": 20000,
+    "data": {
+        "budgetList|10": [
+            {
+                "date": "@date('yyyy-MM')",
+                "name": "@cname",
+                "category": "@cname",
+                "amount": "@integer(0,100)",
+                "income": "@boolean"
+            }
+        ]
+    }
+})
 //拦截/user/budget/allget请求,返回模拟数据,指定httpstatus为20000
 //格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
 Mock.mock('http://localhost:8088/user/budget/all', 'get', {
@@ -203,5 +219,39 @@ Mock.mock('http://localhost:8088/user/budget/add', 'post', {
         "category": "@cname",
         "amount": "@integer(0,100)",
         "income": "@boolean"
+    }
+})
+//拦截/user/budget/health get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/budget/health', 'get', {
+    "status": 20000,
+    "data": {
+        "health": "@integer(0,100)",
+    }
+})
+//拦截/user/budget/remainPercentage get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/budget/remainPercentage', 'get', {
+    "status": 20000,
+    "data": {
+        "remainPercentage": "@integer(0,100)",
+    }
+})
+//拦截/user/budget/categories get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/budget/categories', 'get', {
+    "status": 20000,
+    "data": {
+        "categories|10": [
+            {
+                "name": "@cname",
+                "percentage": "@integer(0,100)",
+            }
+        ]
+    }
+})
+//拦截/user/budget/gpt get请求,返回模拟数据,指定httpstatus为20000
+//gpt是一个段落
+Mock.mock('http://localhost:8088/user/budget/gpt', 'get', {
+    "status": 20000,
+    "data": {
+        "gpt": "@cparagraph",
     }
 })
