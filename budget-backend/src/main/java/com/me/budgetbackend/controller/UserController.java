@@ -54,6 +54,9 @@ public class UserController {
     public Result getAvatar(@RequestHeader("Authorization") String token)
     {
         try{
+            String url = userService.getAvatar(token);
+            if (url == null)
+                return Result.ok().data("avatar", "");
             return Result.ok().data("avatar", userService.getAvatar(token));
         } catch (Exception e) {
             return Result.error(ResultCode.USER_NOT_FOUND);

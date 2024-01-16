@@ -136,7 +136,7 @@ export default {
   created() {
     this.$http.get("/user/budget/all").then((res) => {
       console.log("获取预算：", res);
-      if (res.data.status === 20000) {
+      if (res.data.code === 20000) {
         this.$store.commit("setBudgets", res.data.data.budgetList);
         this.tableData = this.getBudgets();
       } else {
@@ -189,7 +189,7 @@ export default {
         },
       }).then((res) => {
         console.log("删除预算：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.$message.success("删除成功");
         } else {
           this.$message.error(res.data.message);

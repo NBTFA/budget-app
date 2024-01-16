@@ -34,7 +34,7 @@ export default {
   created: function() {
     this.$http.get("/user/todo").then((res) => {
         console.log("获取用户排名：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.todos = res.data.data.todos;
         } else {
           this.$message.error(res.data.message);

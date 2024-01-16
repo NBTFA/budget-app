@@ -30,7 +30,7 @@ export default {
     },
     processData() {
       this.$http.get('/user/budget', { params: { frame: this.timeframe } }).then(res => {
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.data = res.data.data.budgetList; // 直接替换 data 对象
           this.dataLoaded = true; // 数据加载完成
         } else {

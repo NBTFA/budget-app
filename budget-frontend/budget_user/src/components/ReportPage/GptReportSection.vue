@@ -25,7 +25,7 @@ export default {
       this.gptResponse = "暂无分析";
       this.$http.get("/user/budget/gpt").then((res) => {
         console.log("gpt分析：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.gptResponse = res.data.data.gpt;
         } else {
           this.$message.error(res.data.message);

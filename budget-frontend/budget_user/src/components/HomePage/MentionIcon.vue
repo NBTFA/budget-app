@@ -30,7 +30,7 @@ export default {
     getMention() {
       this.$http.get("/user/notification").then((res) => {
         console.log("获取提醒：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.mentionNum = res.data.data.notificationNum;
           this.mention = res.data.data.notifications;
         } else {

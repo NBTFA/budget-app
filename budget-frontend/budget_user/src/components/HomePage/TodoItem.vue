@@ -77,7 +77,7 @@ export default {
           completedDate: new Date().toISOString(),
         }).then((res) => {
           console.log("添加待办事项：", res);
-          if (res.data.status === 20000) {
+          if (res.data.code === 20000) {
             this.$message.success("添加成功");
           } else {
             this.$message.error(res.data.message);

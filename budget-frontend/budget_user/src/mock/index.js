@@ -27,15 +27,15 @@ import Mock from 'mockjs'
 //     }
 // })
 //拦截/user/avatar get请求,返回模拟url,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/avatar', 'get', {
-    "status": 20000,
-    "data": {
-        "url": "@image('200x200','red','#fff','avatar')"
-    }
-})
+// Mock.mock('http://localhost:8088/user/avatar', 'get', {
+//     "status": 20000,
+//     "data": {
+//         "url": "@image('200x200','red','#fff','avatar')"
+//     }
+// })
 //拦截/user/mention get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/notification', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "notificationNum": "@integer(0,100)",
         "notifications": [
@@ -69,14 +69,14 @@ Mock.mock('http://localhost:8088/user/notification', 'get', {
 })
 //拦截/user/continue get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/continue', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "continue": "@integer(0,100)",
     }
 })
 //拦截/user/rankList get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/rankList', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "rankUsers|10": [
             {
@@ -89,7 +89,7 @@ Mock.mock('http://localhost:8088/user/rankList', 'get', {
 })
 //拦截/user/todoList get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todoList', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "todoList|5": [
             {
@@ -101,7 +101,7 @@ Mock.mock('http://localhost:8088/user/todoList', 'get', {
 })
 //拦截/user/budget/progress get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget/progress', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "progress": "@integer(0,100)",
     }
@@ -109,7 +109,7 @@ Mock.mock('http://localhost:8088/user/budget/progress', 'get', {
 //拦截/user/budget?frame=year get请求,返回模拟数据,指定httpstatus为20000
 //格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
 Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "budgetList|10": [
             {
@@ -125,7 +125,7 @@ Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
 //拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
 //格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
 Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "budgetList|10": [
             {
@@ -141,7 +141,7 @@ Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
 //拦截/user/budget/allget请求,返回模拟数据,指定httpstatus为20000
 //格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
 Mock.mock('http://localhost:8088/user/budget/all', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "budgetList|10": [
             {
@@ -157,7 +157,7 @@ Mock.mock('http://localhost:8088/user/budget/all', 'get', {
 //拦截/user/budget/pieChart get请求,返回模拟数据,指定httpstatus为20000
 //{ name: "餐饮", value: 100 }
 Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "pieChart|10": [
             {
@@ -169,13 +169,13 @@ Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
 })
 //拦截/user/todo/add post请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'post', {
-    "status": 20000,
+    "code": 20000,
     "id": "@id"
 })
 //拦截/user/todo get请求,返回模拟数据,指定httpstatus为20000
 //格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true, id: 1}
 Mock.mock('http://localhost:8088/user/todo', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "todos": [
             {
@@ -197,21 +197,21 @@ Mock.mock('http://localhost:8088/user/todo', 'get', {
 })
 //拦截/user/todo delete请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'delete', {
-    "status": 20000,
+    "code": 20000,
 })
 //拦截/user/todo/{id} patch请求,返回模拟数据,指定httpstatus为20000
 //id为todo的id，使用正则表达式匹配
 Mock.mock(/http:\/\/localhost:8088\/user\/todo\/\d+/, 'patch', {
-    "status": 20000,
+    "code": 20000,
 })
 //拦截/user/budget?id=111 delete请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget', 'delete', {
-    "status": 20000,
+    "code": 20000,
 })
 //拦截/user/budget/add post请求,返回模拟数据,指定httpstatus为20000
 //格式为{ id, date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
 Mock.mock('http://localhost:8088/user/budget/add', 'post', {
-    "status": 20000,
+    "code": 20000,
     "budget": {
         "id": "@id",
         "date": "@date('yyyy-MM-dd')",
@@ -223,21 +223,21 @@ Mock.mock('http://localhost:8088/user/budget/add', 'post', {
 })
 //拦截/user/budget/health get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget/health', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "health": "@integer(0,100)",
     }
 })
 //拦截/user/budget/remainPercentage get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget/remainPercentage', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "remainPercentage": "@integer(0,100)",
     }
 })
 //拦截/user/budget/categories get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget/categories', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "categories|10": [
             {
@@ -250,7 +250,7 @@ Mock.mock('http://localhost:8088/user/budget/categories', 'get', {
 //拦截/user/budget/gpt get请求,返回模拟数据,指定httpstatus为20000
 //gpt是一个段落
 Mock.mock('http://localhost:8088/user/budget/gpt', 'get', {
-    "status": 20000,
+    "code": 20000,
     "data": {
         "gpt": "@cparagraph",
     }

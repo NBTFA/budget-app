@@ -37,10 +37,10 @@ export default {
   },
   methods: {
     getUserAvatar() {
-      this.$http.get("/user/avatar").then((res) => {
+      this.$http.get('/user/avatar').then((res) => {
         console.log("获取用户头像：", res);
-        if (res.data.status === 20000) {
-          this.url = res.data.data.url;
+        if (res.data.code === 20000) {
+          this.url = res.data.data.avatar;
         } else {
           this.$message.error(res.data.message);
         }

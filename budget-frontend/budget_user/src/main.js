@@ -14,13 +14,13 @@ Vue.use(ElementUI);
 
 axios.defaults.baseURL = 'http://localhost:8088';
 Vue.prototype.$http = axios;
-axios.interceptors.response.use(request => {
+axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token) {
-    request.headers.Authorization = token;
+    config.headers.Authorization = token;
   }
-  console.log('request', request);
-  return request;
+  console.log('request', config);
+  return config;
 });
 
 store.dispatch('loadToken');

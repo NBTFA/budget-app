@@ -38,7 +38,7 @@ export default {
     // 获取预算进度百分比
     this.$http.get("/user/budget/progress").then((res) => {
       console.log("预算进度：", res);
-      if (res.data.status === 20000) {
+      if (res.data.code === 20000) {
         this.percentage = res.data.data.progress;
       } else {
         this.$message.error(res.data.message);
@@ -48,7 +48,7 @@ export default {
     // 获取饼图数据
     this.$http.get("/user/budget/pieChart").then((res) => {
       console.log("饼图数据：", res);
-      if (res.data.status === 20000) {
+      if (res.data.code === 20000) {
         this.pieChartData = res.data.data.pieChart;
       } else {
         this.$message.error(res.data.message);

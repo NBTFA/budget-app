@@ -105,7 +105,7 @@ export default {
   created() {
     this.$http.get("/user/todo").then((res) => {
       console.log("获取待办事项：", res);
-      if (res.data.status === 20000) {
+      if (res.data.code === 20000) {
         this.todoItems = res.data.data.todos;
       } else {
         this.$message.error(res.data.message);
@@ -129,7 +129,7 @@ export default {
           })
           .then((res) => {
             console.log("完成待办事项：", res);
-            if (res.data.status === 20000) {
+            if (res.data.code === 20000) {
               this.$message.success("添加成功");
             } else {
               this.$message.error(res.data.message);
@@ -153,7 +153,7 @@ export default {
         })
         .then((res) => {
           console.log("添加待办事项：", res);
-          if (res.data.status === 20000) {
+          if (res.data.code === 20000) {
             this.$message.success("添加成功");
             this.todoItem.id = res.data.id;
             this.todoItems.push({
@@ -191,7 +191,7 @@ export default {
             })
             .then((res) => {
               console.log("删除待办事项：", res);
-              if (res.data.status === 20000) {
+              if (res.data.code === 20000) {
               } else {
                 this.$message.error(res.data.message);
               }

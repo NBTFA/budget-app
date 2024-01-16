@@ -45,7 +45,7 @@ export default {
     getPercentage() {
       this.$http.get("/user/budget/health").then((res) => {
         console.log("预算健康度：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.percentage = res.data.data.health;
         } else {
           this.$message.error(res.data.message);
@@ -55,7 +55,7 @@ export default {
     getRemain() {
       this.$http.get("/user/budget/remainPercentage").then((res) => {
         console.log("预算剩余：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.remain = res.data.data.remainPercentage;
         } else {
           this.$message.error(res.data.message);
@@ -65,7 +65,7 @@ export default {
     getCategories() {
       this.$http.get("/user/budget/categories").then((res) => {
         console.log("预算类别：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.categories = res.data.data.categories;
         } else {
           this.$message.error(res.data.message);
