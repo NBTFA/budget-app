@@ -8,7 +8,14 @@
     <div class="menu-right">
       <MentionIcon></MentionIcon>
       <ContinueIcon></ContinueIcon>
-      <el-avatar icon="el-icon-user-solid" :size="50" :src="url"></el-avatar>
+      <el-dropdown @command="handleCommand">
+      <span class="avatar-wrapper">
+        <el-avatar icon="el-icon-user-solid" :size="50" :src="url"></el-avatar>
+      </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item divided command="logout">退出</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
     </div>
   </el-menu>
 </template>
@@ -56,6 +63,17 @@ export default {
       if (this.$route.path === "/report") return;
       this.$router.push("/report");
     },
+    handleCommand(command) {
+      if (command === 'logout') {
+        // 执行退出操作
+        console.log('退出操作');
+        // 比如清除本地存储，重定向到登录页面等
+        this.$router.push('/login');
+        //清除本地存储
+        this.$store.commit('deleteToken');
+        localStorage.removeItem('token');
+      }
+    },
   },
   computed: {
     activeIndex() {
@@ -83,5 +101,8 @@ export default {
 .fa-bell:hover {
   color: #409eff;
 }
+.avatar-wrapper {
+    cursor: pointer; /* 显示一个手型指针表示这是一个可点击的项 */
+  }
 
 </style>

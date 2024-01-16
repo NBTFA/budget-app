@@ -38,11 +38,11 @@
           console.log('登录结果：', res);
           if (res.data.code === 20000) {
             console.log('登录跳转');
-            this.$router.push('/home');
             if(res.data.data.token) {
               localStorage.setItem('token', res.data.data.token);
               this.$store.commit('setToken', res.data.data.token);
             }
+            this.$router.push('/home');
           } else {
             this.$message.error(res.data.message);
           }

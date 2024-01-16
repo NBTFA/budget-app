@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
 import ElementUI from "element-ui";
+import routes from "@/router";
 
 Vue.use(Vuex);
 Vue.prototype.$http = axios;
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
     setToken(state, token) {
       state.taken = token;
     },
+    deleteToken(state) {
+      state.taken = '';
+    },
     setBudgets(state, budgets) {
       state.budgets = budgets;
     },
@@ -34,6 +38,9 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    deleteToken({ commit }) {
+      commit('deleteToken');
+    },
     setBudgets({ commit }, budgets) {
       commit('SET_BUDGETS', budgets);
     },
@@ -64,7 +71,7 @@ const store = new Vuex.Store({
       else {
         console.log('no token');
         commit('setToken', '');
-        this.$router.push('/login');
+        routes.push('/login');
       }
     }
   },
