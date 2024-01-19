@@ -57,11 +57,11 @@ export default {
         console.log("注册结果：", res);
         if (res.data.code === 20000) {
           this.$message.success("注册成功");
-          this.$router.push("/home");
           if (res.data.data.token) {
             localStorage.setItem("token", res.data.data.token);
             this.$store.commit("setToken", res.data.data.token);
           }
+          this.$router.push("/home");
         } else {
           this.$message.error(res.data.message);
         }

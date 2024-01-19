@@ -39,6 +39,12 @@ public class UserService {
         if(user1 == null)
         {
             userMapper.insert(user);
+            user1 = userMapper.selectByUsername(user.getUsername());
+            ContinuousRecord continuousRecord = new ContinuousRecord();
+            continuousRecord.setUser_id((int) user1.getId().doubleValue());
+            continuousRecord.setCount(0);
+            continuousRecord.setRecord_date(new java.sql.Date(System.currentTimeMillis()));
+            continuousRecordMapper.insert(continuousRecord);
         }
         else
             throw new UserAlreadyExistException("用户已存在");

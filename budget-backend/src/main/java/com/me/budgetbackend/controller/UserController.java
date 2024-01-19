@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.me.budgetbackend.entity.Notification;
 import com.me.budgetbackend.entity.User;
+import com.me.budgetbackend.exceptions.UserAlreadyExistException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.ContinuousRecordMapper;
 import com.me.budgetbackend.mapper.UserMapper;
@@ -43,7 +44,7 @@ public class UserController {
     {
         try {
             userService.register(user);
-        } catch (UserNotFoundException e) {
+        } catch (UserAlreadyExistException e) {
             return Result.error(ResultCode.USER_ALREADY_EXISTS);
         }
         String token = JwtUtils.generateToken(user.getUsername());
@@ -88,7 +89,7 @@ public class UserController {
     {
         try{
             return Result.ok().data("continue", userService.getContinue(token));
-        } catch (Exception e) {
+        } catch (UserNotFoundException e) {
             return Result.error(ResultCode.USER_NOT_FOUND);
         }
     }

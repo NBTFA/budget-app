@@ -19,6 +19,19 @@
           <budget-table></budget-table>
         </div>
       </el-main>
+
+      <el-dialog
+        title="设置总预算"
+        :visible.sync="showBudgetDialog"
+        :before-close="handleClose"
+        width="30%"
+      >
+        <span>请设定您的总预算</span>
+        <el-input v-model="inputBudget" placeholder="请输入预算"></el-input>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="setTotalBudget">设定</el-button>
+        </span>
+      </el-dialog>
     </el-container>
   </el-container>
 </template>
@@ -32,12 +45,42 @@ import BudgetInfo from "@/components/BudgetInfo.vue";
 export default {
   data() {
     return {
-      // 在这里添加数据
+      totalBudget: 0,
+      showBudgetDialog: false, // 控制弹窗显示的变量
+      inputBudget: 0,
     };
   },
   components: { Navigator, SideBar, BudgetTable, BudgetInfo },
   methods: {
     // 在这里添加方法
+    setTotalBudget() {
+      // 设定总预算的逻辑
+      // 可以在这里发送请求到服务器更新 totalBudget
+      this.totalBudget = this.inputBudget;
+      this.showBudgetDialog = false;
+      // 更新操作后的逻辑，例如更新视图或通知用户
+    },
+    handleClose(done) {
+      // 在这里可以添加逻辑，例如提示用户必须设置预算
+      // 如果不希望在未设置预算时关闭对话框，可以不调用 done()
+      this.$message({
+        type: 'info',
+        message: '请先设置总预算'
+      });
+    }
+  },
+  created() {
+    this.$http.get("/user/totalBudget").then((res) => {
+      console.log("totalBudget: ", res);
+      if (res.data.code === 20000) {
+        this.totalBudget = res.data.data.totalBudget;
+        if (this.totalBudget === 0) {
+          this.showBudgetDialog = true;
+        }
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
 };
 </script>
