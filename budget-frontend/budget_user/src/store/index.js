@@ -22,7 +22,6 @@ const store = new Vuex.Store({
     isLoadingTodoLists: false,
     totalBudget: 0,
     pieChartData: [],
-    budgets: [],
     progress: 0,
   },
   mutations: {

@@ -159,6 +159,11 @@ export default {
       return data;
     },
   },
+  watch: {
+    "$store.state.budgets": function (newVal, oldVal) {
+      this.tableData = newVal;
+    },
+  },
   methods: {
     getBudgets() {
       return this.$store.state.budgets;

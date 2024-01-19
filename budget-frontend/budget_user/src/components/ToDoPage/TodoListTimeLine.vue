@@ -102,15 +102,13 @@ export default {
       activeItemIndex: null,
     };
   },
+  watch: {
+    "$store.state.todoLists": function (newVal, oldVal) {
+      this.todoItems = newVal;
+    },
+  },
   created() {
-    this.$http.get("/user/todo").then((res) => {
-      console.log("获取待办事项：", res);
-      if (res.data.code === 20000) {
-        this.todoItems = res.data.data.todos;
-      } else {
-        this.$message.error(res.data.message);
-      }
-    });
+    this.todoItems = this.$store.state.todoLists;
   },
   methods: {
     prepareCompletion(index) {

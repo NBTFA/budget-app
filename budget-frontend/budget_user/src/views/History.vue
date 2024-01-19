@@ -53,6 +53,7 @@
 <script>
 import Navigator from "../components/Navigator.vue";
 import BudgetTableVue from "@/components/BudgetTable.vue";
+import store from '@/store/index.js'
 export default {
   name: "History",
   components: { Navigator, BudgetTableVue },
@@ -67,6 +68,20 @@ export default {
         income: false,
       },
     };
+  },
+  created() {
+    this.$http.get("/user/historyRequest").then((res) => {
+      console.log("historyRequest: ", res);
+      if (res.data.code === 20000) {
+        store.dispatch("setAvatar", res.data.data.avatar);
+        store.dispatch("setNotificationNum", res.data.data.notificationNum);
+        store.dispatch("setNotifications", res.data.data.notifications);
+        store.dispatch("setContinueNum", res.data.data.continueNum);
+        store.dispatch("setBudgets", res.data.data.budgetList);
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
   methods: {
     submitBudget() {

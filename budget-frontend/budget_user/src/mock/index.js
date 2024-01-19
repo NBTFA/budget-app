@@ -344,3 +344,100 @@ Mock.mock('http://localhost:8088/user/homeRequest', 'get', {
 
     }
 })
+////拦截/user/todoRequest get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/todoRequest', 'get', {
+    "code": 20000,
+    "data": {
+        "todoList": [
+            {
+                "id": "1",
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            },
+            {
+                "id": "2",
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            },
+        ],
+        "avatar": "@image('200x200','red','#fff','avatar')",
+        "notificationNum": "@integer(0,100)",
+        "notifications": [
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便23232323",
+                "createTime": "123",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+        ],
+        "continueNum": "@integer(0,100)",
+    }
+})
+////拦截/user/historyRequest get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/historyRequest', 'get', {
+    "code": 20000,
+    "data": {
+        "budgetList|10": [
+            {
+                "date": "@date('yyyy-MM-dd')",
+                "name": "@cname",
+                "category": "@cname",
+                "amount": "@integer(0,100)",
+                "income": "@boolean"
+            }
+        ],
+        "avatar": "@image('200x200','red','#fff','avatar')",
+        "notificationNum": "@integer(0,100)",
+        "notifications": [
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便23232323",
+                "createTime": "123",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+        ],
+        "continueNum": "@integer(0,100)",
+    }
+})

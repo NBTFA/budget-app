@@ -14,6 +14,7 @@
 <script>
 import TodoListTimeLine from "@/components/ToDoPage/TodoListTimeLine.vue";
 import Navigator from "../components/Navigator.vue";
+import store from '@/store/index.js'
 export default {
   name: "Todo",
   components: { Navigator, TodoListTimeLine },
@@ -26,6 +27,20 @@ export default {
         date: "",
       },
     };
+  },
+  created() {
+    this.$http.get("/user/todoRequest").then((res) => {
+      console.log("todoRequest: ", res);
+      if (res.data.code === 20000) {
+        store.dispatch("setAvatar", res.data.data.avatar);
+        store.dispatch("setNotificationNum", res.data.data.notificationNum);
+        store.dispatch("setNotifications", res.data.data.notifications);
+        store.dispatch("setContinueNum", res.data.data.continueNum);
+        store.dispatch("setTodoLists", res.data.data.todoList);
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
   methods: {
     onConfirm() {

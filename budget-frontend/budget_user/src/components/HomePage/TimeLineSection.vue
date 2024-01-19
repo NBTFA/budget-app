@@ -22,6 +22,12 @@ export default {
       data: [],
     };
   },
+  watch: {
+    "$store.state.budgets"(newVal) {
+      this.processData();
+      this.dataLoaded = true; // 数据加载完成后设置为 true
+    },
+  },
   methods: {
     setTimeFrame(frame) {
       this.timeframe = frame;
@@ -29,17 +35,7 @@ export default {
       this.processData();
     },
     processData() {
-      this.$http.get('/user/budget', { params: { frame: this.timeframe } }).then(res => {
-        if (res.data.code === 20000) {
-          this.data = res.data.data.budgetList; // 直接替换 data 对象
-          this.dataLoaded = true; // 数据加载完成
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(err => {
-        this.$message.error('获取预算信息失败');
-        console.error(err);
-      });
+      this.data = this.$store.state.budgets; // 从 store 中获取数据
     },
     showDetails(point) {
       this.$message.info(`${point.name}：${point.value}元`);
