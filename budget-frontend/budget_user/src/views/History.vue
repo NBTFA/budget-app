@@ -89,7 +89,7 @@ export default {
       // 这里可以添加预算逻辑
       this.$http.post("/user/budget/add", this.budgetForm).then((res) => {
         console.log("预算结果：", res);
-        if (res.data.status === 20000) {
+        if (res.data.code === 20000) {
           this.$message.success("添加成功");
           this.dialogVisible = false;
           this.$refs.budgetForm.resetFields();

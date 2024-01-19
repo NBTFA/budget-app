@@ -34,167 +34,167 @@ import Mock from 'mockjs'
 //     }
 // })
 //拦截/user/mention get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/notification', 'get', {
-    "code": 20000,
-    "data": {
-        "notificationNum": "@integer(0,100)",
-        "notifications": [
-            {
-                "title": "大便",
-                "content": "你有一份没吃的大便23232323",
-                "createTime": "123",
-            },
-            {
-                "title": "大便",
-                "content": "你有一份没吃的大便",
-                "createTime": "@datetime",
-            },
-            {
-                "title": "大便",
-                "content": "你有一份没吃的大便",
-                "createTime": "@datetime",
-            },
-            {
-                "title": "大便",
-                "content": "你有一份没吃的大便",
-                "createTime": "@datetime",
-            },
-            {
-                "title": "大便",
-                "content": "你有一份没吃的大便",
-                "createTime": "@datetime",
-            },
-        ]
-    }
-})
-//拦截/user/continue get请求,返回模拟数据,指定httpstatus为20000
-// Mock.mock('http://localhost:8088/user/continue', 'get', {
+// Mock.mock('http://localhost:8088/user/notification', 'get', {
 //     "code": 20000,
 //     "data": {
-//         "continue": "@integer(0,100)",
+//         "notificationNum": "@integer(0,100)",
+//         "notifications": [
+//             {
+//                 "title": "大便",
+//                 "content": "你有一份没吃的大便23232323",
+//                 "createTime": "123",
+//             },
+//             {
+//                 "title": "大便",
+//                 "content": "你有一份没吃的大便",
+//                 "createTime": "@datetime",
+//             },
+//             {
+//                 "title": "大便",
+//                 "content": "你有一份没吃的大便",
+//                 "createTime": "@datetime",
+//             },
+//             {
+//                 "title": "大便",
+//                 "content": "你有一份没吃的大便",
+//                 "createTime": "@datetime",
+//             },
+//             {
+//                 "title": "大便",
+//                 "content": "你有一份没吃的大便",
+//                 "createTime": "@datetime",
+//             },
+//         ]
 //     }
 // })
-//拦截/user/rankList get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/rankList', 'get', {
-    "code": 20000,
-    "data": {
-        "rankUsers|10": [
-            {
-                "username": "@cname",
-                "rank": "@integer(1,5)",
-                "continuousRecord": "@integer(0,100)",
-            }
-        ]
-    }
-})
-//拦截/user/todoList get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/todoList', 'get', {
-    "code": 20000,
-    "data": {
-        "todoList|5": [
-            {
-                "description": "@cname",
-                "completedDate": "@Date"
-            }
-        ]
-    }
-})
-//拦截/user/budget/progress get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/budget/progress', 'get', {
-    "code": 20000,
-    "data": {
-        "progress": "@integer(0,100)",
-    }
-})
-//拦截/user/budget?frame=year get请求,返回模拟数据,指定httpstatus为20000
-//格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
-Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
-    "code": 20000,
-    "data": {
-        "budgetList|10": [
-            {
-                "date": "@date('yyyy-MM')",
-                "name": "@cname",
-                "category": "@cname",
-                "amount": "@integer(0,100)",
-                "income": "@boolean"
-            }
-        ]
-    }
-})
-//拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
-//格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
-Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
-    "code": 20000,
-    "data": {
-        "budgetList|10": [
-            {
-                "date": "@date('yyyy-MM')",
-                "name": "@cname",
-                "category": "@cname",
-                "amount": "@integer(0,100)",
-                "income": "@boolean"
-            }
-        ]
-    }
-})
-//拦截/user/budget/allget请求,返回模拟数据,指定httpstatus为20000
-//格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
-Mock.mock('http://localhost:8088/user/budget/all', 'get', {
-    "code": 20000,
-    "data": {
-        "budgetList|10": [
-            {
-                "date": "@date('yyyy-MM-dd')",
-                "name": "@cname",
-                "category": "@cname",
-                "amount": "@integer(0,100)",
-                "income": "@boolean"
-            }
-        ]
-    }
-})
-//拦截/user/budget/pieChart get请求,返回模拟数据,指定httpstatus为20000
-//{ name: "餐饮", value: 100 }
-Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
-    "code": 20000,
-    "data": {
-        "pieChart|10": [
-            {
-                "name": "@cname",
-                "value": "@integer(0,100)",
-            }
-        ]
-    }
-})
+// //拦截/user/continue get请求,返回模拟数据,指定httpstatus为20000
+// // Mock.mock('http://localhost:8088/user/continue', 'get', {
+// //     "code": 20000,
+// //     "data": {
+// //         "continue": "@integer(0,100)",
+// //     }
+// // })
+// //拦截/user/rankList get请求,返回模拟数据,指定httpstatus为20000
+// Mock.mock('http://localhost:8088/user/rankList', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "rankUsers|10": [
+//             {
+//                 "username": "@cname",
+//                 "rank": "@integer(1,5)",
+//                 "continuousRecord": "@integer(0,100)",
+//             }
+//         ]
+//     }
+// })
+// //拦截/user/todoList get请求,返回模拟数据,指定httpstatus为20000
+// Mock.mock('http://localhost:8088/user/todoList', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "todoList|5": [
+//             {
+//                 "description": "@cname",
+//                 "completedDate": "@Date"
+//             }
+//         ]
+//     }
+// })
+// //拦截/user/budget/progress get请求,返回模拟数据,指定httpstatus为20000
+// Mock.mock('http://localhost:8088/user/budget/progress', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "progress": "@integer(0,100)",
+//     }
+// })
+// //拦截/user/budget?frame=year get请求,返回模拟数据,指定httpstatus为20000
+// //格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+// Mock.mock('http://localhost:8088/user/budget?frame=year', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "budgetList|10": [
+//             {
+//                 "date": "@date('yyyy-MM')",
+//                 "name": "@cname",
+//                 "category": "@cname",
+//                 "amount": "@integer(0,100)",
+//                 "income": "@boolean"
+//             }
+//         ]
+//     }
+// })
+// //拦截/user/budget?frame=month get请求,返回模拟数据,指定httpstatus为20000
+// //格式为{ date: '2020-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+// Mock.mock('http://localhost:8088/user/budget?frame=month', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "budgetList|10": [
+//             {
+//                 "date": "@date('yyyy-MM')",
+//                 "name": "@cname",
+//                 "category": "@cname",
+//                 "amount": "@integer(0,100)",
+//                 "income": "@boolean"
+//             }
+//         ]
+//     }
+// })
+// //拦截/user/budget/allget请求,返回模拟数据,指定httpstatus为20000
+// //格式为{ date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+// Mock.mock('http://localhost:8088/user/budget/all', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "budgetList|10": [
+//             {
+//                 "date": "@date('yyyy-MM-dd')",
+//                 "name": "@cname",
+//                 "category": "@cname",
+//                 "amount": "@integer(0,100)",
+//                 "income": "@boolean"
+//             }
+//         ]
+//     }
+// })
+// //拦截/user/budget/pieChart get请求,返回模拟数据,指定httpstatus为20000
+// //{ name: "餐饮", value: 100 }
+// Mock.mock('http://localhost:8088/user/budget/pieChart', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "pieChart|10": [
+//             {
+//                 "name": "@cname",
+//                 "value": "@integer(0,100)",
+//             }
+//         ]
+//     }
+// })
 //拦截/user/todo/add post请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'post', {
     "code": 20000,
     "id": "@id"
 })
-//拦截/user/todo get请求,返回模拟数据,指定httpstatus为20000
-//格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true, id: 1}
-Mock.mock('http://localhost:8088/user/todo', 'get', {
-    "code": 20000,
-    "data": {
-        "todos": [
-            {
-                "id": "1",
-                "time": "@date('yyyy-MM-dd')",
-                "title": "@cname",
-                "content": "@cname",
-                "completed": "@boolean"
-            },
-            {
-                "id": "2",
-                "time": "@date('yyyy-MM-dd')",
-                "title": "@cname",
-                "content": "@cname",
-                "completed": "@boolean"
-            },
-        ]
-    }
-})
+// //拦截/user/todo get请求,返回模拟数据,指定httpstatus为20000
+// //格式为{ time: '2020-01-01', title: '项目A', content: '分类1', completed: true, id: 1}
+// Mock.mock('http://localhost:8088/user/todo', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "todos": [
+//             {
+//                 "id": "1",
+//                 "time": "@date('yyyy-MM-dd')",
+//                 "title": "@cname",
+//                 "content": "@cname",
+//                 "completed": "@boolean"
+//             },
+//             {
+//                 "id": "2",
+//                 "time": "@date('yyyy-MM-dd')",
+//                 "title": "@cname",
+//                 "content": "@cname",
+//                 "completed": "@boolean"
+//             },
+//         ]
+//     }
+// })
 //拦截/user/todo delete请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/todo', 'delete', {
     "code": 20000,
@@ -255,17 +255,17 @@ Mock.mock('http://localhost:8088/user/budget/gpt', 'get', {
         "gpt": "@cparagraph",
     }
 })
-//拦截/user/totalBudget get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/totalBudget', 'get', {
-    "code": 20000,
-    "data": {
-        "totalBudget": -1,
-    }
-})
-//拦截/user/totalBudget get请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/initialize', 'post', {
-    "code": 20000,
-})
+// //拦截/user/totalBudget get请求,返回模拟数据,指定httpstatus为20000
+// Mock.mock('http://localhost:8088/user/totalBudget', 'get', {
+//     "code": 20000,
+//     "data": {
+//         "totalBudget": -1,
+//     }
+// })
+// //拦截/user/totalBudget get请求,返回模拟数据,指定httpstatus为20000
+// Mock.mock('http://localhost:8088/user/initialize', 'post', {
+//     "code": 20000,
+// })
 
 //拦截/user/homeRequest get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/homeRequest', 'get', {

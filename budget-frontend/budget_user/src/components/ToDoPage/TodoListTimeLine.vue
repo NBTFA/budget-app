@@ -108,7 +108,7 @@ export default {
     },
   },
   created() {
-    this.todoItems = this.$store.state.todoLists;
+
   },
   methods: {
     prepareCompletion(index) {
