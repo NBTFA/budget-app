@@ -26,20 +26,23 @@ export default {
   created() {
     this.getMention();
   },
+  //this.mentionNum监视store.state.notificationNum的变化
+  watch: {
+    "$store.state.notificationNum": function (newVal, oldVal) {
+      this.mentionNum = newVal;
+    },
+    "$store.state.notifications": function (newVal, oldVal) {
+      this.mention = newVal;
+    },
+  },
   methods: {
     getMention() {
-      this.$http.get("/user/notification").then((res) => {
-        console.log("获取提醒：", res);
-        if (res.data.code === 20000) {
-          this.mentionNum = res.data.data.notificationNum;
-          this.mention = res.data.data.notifications;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
+      this.mentionNum = this.$store.state.notificationNum;
+      this.mention = this.$store.state.notifications;
     },
     clearMention() {
         this.mentionNum = 0;
+        this.$store.dispatch('clearNotificationNum');
     }
   },
 };

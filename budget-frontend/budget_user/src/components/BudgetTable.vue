@@ -134,15 +134,7 @@ export default {
     };
   },
   created() {
-    this.$http.get("/user/budget/all").then((res) => {
-      console.log("获取预算：", res);
-      if (res.data.code === 20000) {
-        this.$store.commit("setBudgets", res.data.data.budgetList);
-        this.tableData = this.getBudgets();
-      } else {
-        this.$message.error(res.data.message);
-      }
-    });
+    this.tableData = this.$store.state.budgets;
   },
   computed: {
     budgets() {
@@ -150,7 +142,6 @@ export default {
     },
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.budgets;
-      console.log("data", data);
       if (this.searchText) {
         return data.filter(
           (item) =>

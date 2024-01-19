@@ -36,16 +36,15 @@ export default {
   created() {
     this.getUserAvatar();
   },
+  //this.url监视store.state.avatar的变化
+  watch: {
+    "$store.state.avatar": function (newVal, oldVal) {
+      this.url = newVal;
+    },
+  },
   methods: {
     getUserAvatar() {
-      this.$http.get('/user/avatar').then((res) => {
-        console.log("获取用户头像：", res);
-        if (res.data.code === 20000) {
-          this.url = res.data.data.avatar;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
+      this.url = this.$store.state.avatar;
     },
     onClickMainMenu() {
       //如果是首页，就不跳转

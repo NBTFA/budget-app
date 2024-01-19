@@ -28,7 +28,6 @@ export default {
       const createdTime = new Date(isoString);
       const now = new Date();
       const differenceInTime = now.getTime() - createdTime.getTime();
-      console.log(createdTime);
       return Math.floor(differenceInTime / (1000 * 3600 * 24));
     },
   },

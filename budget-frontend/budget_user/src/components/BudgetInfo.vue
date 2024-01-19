@@ -34,26 +34,20 @@ export default {
     TimeLineSection,
     PieChart,
   },
+  watch: {
+    "$store.state.progress": function (newVal, oldVal) {
+      this.percentage = newVal;
+    },
+    "$store.state.pieChartData": function (newVal, oldVal) {
+      this.pieChartData = newVal;
+    },
+  },
   created() {
     // 获取预算进度百分比
-    this.$http.get("/user/budget/progress").then((res) => {
-      console.log("预算进度：", res);
-      if (res.data.code === 20000) {
-        this.percentage = res.data.data.progress;
-      } else {
-        this.$message.error(res.data.message);
-      }
-    });
-
+    this.percentage = this.$store.state.progress;
+  
     // 获取饼图数据
-    this.$http.get("/user/budget/pieChart").then((res) => {
-      console.log("饼图数据：", res);
-      if (res.data.code === 20000) {
-        this.pieChartData = res.data.data.pieChart;
-      } else {
-        this.$message.error(res.data.message);
-      }
-    });
+    this.pieChartData = this.$store.state.pieChartData;
   },
 };
 </script>

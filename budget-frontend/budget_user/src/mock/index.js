@@ -259,6 +259,88 @@ Mock.mock('http://localhost:8088/user/budget/gpt', 'get', {
 Mock.mock('http://localhost:8088/user/totalBudget', 'get', {
     "code": 20000,
     "data": {
+        "totalBudget": -1,
+    }
+})
+//拦截/user/totalBudget get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/initialize', 'post', {
+    "code": 20000,
+})
+
+//拦截/user/homeRequest get请求,返回模拟数据,指定httpstatus为20000
+Mock.mock('http://localhost:8088/user/homeRequest', 'get', {
+    "code": 20000,
+    "data": {
+        "avatar": "@image('200x200','red','#fff','avatar')",
+        "notificationNum": "@integer(0,100)",
+        "notifications": [
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便23232323",
+                "createTime": "123",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+            {
+                "title": "大便",
+                "content": "你有一份没吃的大便",
+                "createTime": "@datetime",
+            },
+        ],
+        "continueNum": "@integer(0,100)",
+        "rankUsers|10": [
+            {
+                "username": "@cname",
+                "rank": "@integer(1,5)",
+                "continuousRecord": "@integer(0,100)",
+            }
+        ],
+        "todoList|5": [
+            {
+                "id": "1",
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            },
+            {
+                "id": "2",
+                "time": "@date('yyyy-MM-dd')",
+                "title": "@cname",
+                "content": "@cname",
+                "completed": "@boolean"
+            },
+        ],
         "totalBudget": "@integer(0,100)",
+        "pieChartData|10": [
+            {
+                "name": "@cname",
+                "value": "@integer(0,100)",
+            }
+        ],
+        "budgetList|10": [
+            {
+                "date": "@date('yyyy-MM-dd')",
+                "name": "@cname",
+                "category": "@cname",
+                "amount": "@integer(0,100)",
+                "income": "@boolean"
+            }
+        ],
+        "progress": "@integer(0,100)",
+
     }
 })

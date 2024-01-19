@@ -20,16 +20,15 @@ export default {
             return num === 0 ? 'black-icon' : 'red-icon';
         }
     },
+    //this.continueNum监视store.state.continueNum的变化
+    watch: {
+        "$store.state.continueNum": function (newVal, oldVal) {
+            this.continueNum = newVal;
+        },
+    },
     methods: {
         getContinue() {
-            this.$http.get("/user/continue").then((res) => {
-                console.log("获取连续打卡天数：", res);
-                if (res.data.code === 20000) {
-                    this.continueNum = res.data.data.continue;
-                } else {
-                    this.$message.error(res.data.message);
-                }
-            });
+            this.continueNum = this.$store.state.continueNum;
         },
     },
     created() {

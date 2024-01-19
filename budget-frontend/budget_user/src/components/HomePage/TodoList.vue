@@ -31,15 +31,13 @@ export default {
       todos: [],
     };
   },
+  watch: {
+    "$store.state.todoLists": function (newVal, oldVal) {
+      this.todos = newVal;
+    },
+  },
   created: function() {
-    this.$http.get("/user/todo").then((res) => {
-        console.log("获取用户排名：", res);
-        if (res.data.code === 20000) {
-          this.todos = res.data.data.todos;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      })
+    this.todos = this.$store.state.todoLists;
   }
   // 可以添加方法用于从后端获取待办事项列表等
 };

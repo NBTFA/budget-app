@@ -34,15 +34,13 @@
         return this.rankUsers.slice(0, 5);
       }
     },
+    watch: {
+      "$store.state.rankUsers": function (newVal, oldVal) {
+        this.rankUsers = newVal;
+      },
+    },
     created: function() {
-      this.$http.get("/user/rankList").then((res) => {
-        console.log("获取用户排名：", res);
-        if (res.data.code === 20000) {
-          this.rankUsers = res.data.data.rankUsers;
-        } else {
-          this.$message.error(res.data.message);
-        }
-      })
+      this.rankUsers = this.$store.state.rankUsers;
     }
   };
   </script>
