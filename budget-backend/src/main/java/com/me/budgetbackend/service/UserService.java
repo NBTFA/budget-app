@@ -1,15 +1,9 @@
 package com.me.budgetbackend.service;
 
-import com.me.budgetbackend.entity.ContinuousRecord;
-import com.me.budgetbackend.entity.Notification;
-import com.me.budgetbackend.entity.TodoListRecord;
-import com.me.budgetbackend.entity.User;
+import com.me.budgetbackend.entity.*;
 import com.me.budgetbackend.exceptions.UserAlreadyExistException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
-import com.me.budgetbackend.mapper.ContinuousRecordMapper;
-import com.me.budgetbackend.mapper.NotificationMapper;
-import com.me.budgetbackend.mapper.TodoListRecordMapper;
-import com.me.budgetbackend.mapper.UserMapper;
+import com.me.budgetbackend.mapper.*;
 import com.me.budgetbackend.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +21,8 @@ public class UserService {
     private TodoListRecordMapper todoListRecordMapper;
     @Autowired
     private NotificationMapper notificationMapper;
+    @Autowired
+    private BudgetRecordMapper BudgetRecordMapper;
     public void login(User user) {
         User user1 = userMapper.login(user);
         if(user1 == null)
@@ -38,13 +34,25 @@ public class UserService {
         User user1 = userMapper.selectByUsername(user.getUsername());
         if(user1 == null)
         {
+            user.setTotal_budget(-1);
+            user.setUsed_budget(0);
+            user.setCreated_at(String.valueOf(new java.sql.Date(System.currentTimeMillis())));
             userMapper.insert(user);
             user1 = userMapper.selectByUsername(user.getUsername());
+
             ContinuousRecord continuousRecord = new ContinuousRecord();
             continuousRecord.setUser_id((int) user1.getId().doubleValue());
             continuousRecord.setCount(0);
             continuousRecord.setRecord_date(new java.sql.Date(System.currentTimeMillis()));
             continuousRecordMapper.insert(continuousRecord);
+
+            Notification notification = new Notification();
+            notification.setUser_id((int) user1.getId().doubleValue());
+            notification.setMessage("欢迎使用Budget");
+            notification.setIs_read(false);
+            notification.setCreated_at(new java.sql.Date(System.currentTimeMillis()));
+            notificationMapper.insert(notification);
+
         }
         else
             throw new UserAlreadyExistException("用户已存在");
@@ -101,5 +109,58 @@ public class UserService {
         if(user == null)
             throw new UserNotFoundException("未找到用户");
         return notificationMapper.selectNotificationByUserId(user.getId());
+    }
+
+    public int getTotalBudget(String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("未找到用户");
+        return userMapper.selectTotalBudgetByUsername(username);
+    }
+
+    public List<PieChartData> getPieChartData(String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("未找到用户");
+        List<PieChartData> pieChartDataList = new ArrayList<>();
+        List<String> categories = BudgetRecordMapper.selectCategoryByUserId(user.getId());
+        for(String category : categories)
+        {
+            int sum = BudgetRecordMapper.selectSumByCategory(user.getId(), category);
+            PieChartData pieChartData = new PieChartData(category, sum);
+            pieChartDataList.add(pieChartData);
+        }
+        return pieChartDataList;
+    }
+
+    public List<BudgetRecord> getBudgetList(String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("未找到用户");
+        return BudgetRecordMapper.selectBudgetRecordByUserId(user.getId());
+    }
+
+    public int getProgress(String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("未找到用户");
+        int used = 0;
+        if(BudgetRecordMapper.selectSumByUserId(user.getId())!=null)
+            used = BudgetRecordMapper.selectSumByUserId(user.getId());
+        int total = userMapper.selectTotalBudgetByUsername(username);
+        return used * 100 / total;
+    }
+
+    public void addTodo(TodoListRecord todoListRecord, String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if (user == null)
+            throw new UserNotFoundException("未找到用户");
+        todoListRecord.setUser_id(user.getId());
+        todoListRecordMapper.insert(todoListRecord);
     }
 }

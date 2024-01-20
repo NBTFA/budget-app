@@ -2,8 +2,7 @@ package com.me.budgetbackend.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.me.budgetbackend.entity.Notification;
-import com.me.budgetbackend.entity.User;
+import com.me.budgetbackend.entity.*;
 import com.me.budgetbackend.exceptions.UserAlreadyExistException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.ContinuousRecordMapper;
@@ -51,60 +50,133 @@ public class UserController {
         return Result.ok().data("token", token);
     }
 
-    @GetMapping("/avatar")
-    public Result getAvatar(@RequestHeader("Authorization") String token)
+    @GetMapping("/homeRequest")
+    public Result processHomeRequest(@RequestHeader("Authorization") String token)
     {
-        try{
+        Result result = Result.ok();
+        try {
             String url = userService.getAvatar(token);
-            if (url == null)
-                return Result.ok().data("avatar", "");
-            return Result.ok().data("avatar", userService.getAvatar(token));
+            result = Result.ok();
+            url = url == null ? "" : url;
+            result.data("avatar", url);
         } catch (Exception e) {
-            return Result.error(ResultCode.USER_NOT_FOUND);
+            return Result.error(ResultCode.GET_AVATAR_FAILED);
         }
-    }
 
-    @GetMapping("/rankList")
-    public Result getRankList(@RequestHeader("Authorization") String token)
-    {
-        try{
-            return Result.ok().data("rankUsers", userService.getRankList(token));
-        } catch (Exception e) {
-            return Result.error(ResultCode.USER_NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/todoList")
-    public Result getTodoList(@RequestHeader("Authorization") String token)
-    {
-        try{
-            return Result.ok().data("todoList", userService.getTodoList(token));
-        } catch (Exception e) {
-            return Result.error(ResultCode.USER_NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/continue")
-    public Result getContinue(@RequestHeader("Authorization") String token)
-    {
-        try{
-            return Result.ok().data("continue", userService.getContinue(token));
-        } catch (UserNotFoundException e) {
-            return Result.error(ResultCode.USER_NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/notification")
-    public Result getNotification(@RequestHeader("Authorization") String token)
-    {
-        try{
-            Result result = Result.ok();
+        try {
             List<Notification> notifications = userService.getNotification(token);
             result.data("notifications", notifications);
             result.data("notificationNum", notifications.size());
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_NOTIFICATION_FAILED);
+        }
+
+        try {
+            int continueDays = userService.getContinue(token);
+            result.data("continueNum", continueDays);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_CONTINUE_FAILED);
+        }
+
+        try {
+            List<User> rankUsers = userService.getRankList(token);
+            result.data("rankUsers", rankUsers);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_RANK_USERS_FAILED);
+        }
+
+        try {
+            List<TodoListRecord> todoList = userService.getTodoList(token);
+            result.data("todoList", todoList);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_TODO_LIST_FAILED);
+        }
+
+        try {
+            int totalBudget = userService.getTotalBudget(token);
+            result.data("totalBudget", totalBudget);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_TOTAL_BUDGET_FAILED);
+        }
+
+        try {
+            List<PieChartData> pieChartData = userService.getPieChartData(token);
+            result.data("pieChartData", pieChartData);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_PIE_CHART_DATA_FAILED);
+        }
+
+        try {
+            List<BudgetRecord> budgetList = userService.getBudgetList(token);
+            result.data("budgetList", budgetList);
+        } catch (Exception e) {
+            return Result.error(ResultCode.GET_BUDGET_LIST_FAILED);
+        }
+
+            int progress = userService.getProgress(token);
+            result.data("progress", progress);
+
+        return result;
+    }
+
+    @GetMapping("/todoRequest")
+    public Result processTodoRequest(@RequestHeader("Authorization") String token)
+    {
+        try{
+            Result result = Result.ok();
+            List<BudgetRecord> budgetList = userService.getBudgetList(token);
+            result.data("budgetList", budgetList);
+
+            String url = userService.getAvatar(token);
+            url = url == null ? "" : url;
+            result.data("avatar", url);
+
+            List<Notification> notifications = userService.getNotification(token);
+            result.data("notifications", notifications);
+            result.data("notificationNum", notifications.size());
+
+            int continueDays = userService.getContinue(token);
+            result.data("continueNum", continueDays);
+
             return result;
         } catch (Exception e) {
             return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/historyRequest")
+    public Result processHistoryRequest(@RequestHeader("Authorization") String token)
+    {
+        try{
+            Result result = Result.ok();
+            List<TodoListRecord> todoList = userService.getTodoList(token);
+            result.data("todoList", todoList);
+
+            String url = userService.getAvatar(token);
+            url = url == null ? "" : url;
+            result.data("avatar", url);
+
+            List<Notification> notifications = userService.getNotification(token);
+            result.data("notifications", notifications);
+            result.data("notificationNum", notifications.size());
+
+            int continueDays = userService.getContinue(token);
+            result.data("continueNum", continueDays);
+
+            return result;
+        } catch (Exception e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/todo")
+    public Result addTodo(@RequestBody TodoListRecord todoListRecord, @RequestHeader("Authorization") String token)
+    {
+        try{
+            userService.addTodo(todoListRecord, token);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(ResultCode.ADD_TODO_FAILED);
         }
     }
 

@@ -9,17 +9,17 @@ public class TodoListRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer user_id;
+    private Long user_id;
     private Date created_Date;
     private Date completed_Date;
     private Boolean completed;
     private String description;
 
-    public Integer getUser_id() {
+    public Long getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
 
