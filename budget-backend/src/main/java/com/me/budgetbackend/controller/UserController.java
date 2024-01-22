@@ -50,6 +50,19 @@ public class UserController {
         return Result.ok().data("token", token);
     }
 
+    @PostMapping("/initialize")
+    public Result setBudgetInfo(@RequestHeader("Authorization") String token,
+                                @RequestBody InitializeBudgetRequest initializeBudgetRequest)
+    {
+        try {
+            userService.setBudgetInfo(token, initializeBudgetRequest.getTotalBudget(),
+                                    initializeBudgetRequest.getBudgetCategories());
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(ResultCode.SET_BUDGET_INFO_FAILED);
+        }
+    }
+
     @GetMapping("/homeRequest")
     public Result processHomeRequest(@RequestHeader("Authorization") String token)
     {

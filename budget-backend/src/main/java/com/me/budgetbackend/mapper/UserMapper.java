@@ -1,10 +1,7 @@
 package com.me.budgetbackend.mapper;
 
 import com.me.budgetbackend.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -33,4 +30,8 @@ public interface UserMapper {
     @Result(column = "used_budget", property = "used_budget")
     @Select("select * from users where id = #{id}")
     public User selectById(Integer id);
+
+    //更新用户的total_budget值
+    @Update("update users set total_budget = #{total_budget} where username = #{username}")
+    public void updateTotalBudgetByUsername(Integer total_budget, String username);
 }

@@ -23,6 +23,8 @@ public class UserService {
     private NotificationMapper notificationMapper;
     @Autowired
     private BudgetRecordMapper BudgetRecordMapper;
+    @Autowired
+    private CategoryMapper categoryMapper;
     public void login(User user) {
         User user1 = userMapper.login(user);
         if(user1 == null)
@@ -162,5 +164,21 @@ public class UserService {
             throw new UserNotFoundException("未找到用户");
         todoListRecord.setUser_id(user.getId());
         todoListRecordMapper.insert(todoListRecord);
+    }
+
+    public void setBudgetInfo(String token, String totalBudget, List<BudgetCategory> categories) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        int budget = Integer.parseInt(totalBudget);
+        userMapper.updateTotalBudgetByUsername(budget, username);
+        for(BudgetCategory c : categories)
+        {
+            Category category = new Category();
+            category.setUser_id((int) user.getId().doubleValue());
+            category.setCategory(c.getName());
+            categoryMapper.insert(category);
+        }
     }
 }

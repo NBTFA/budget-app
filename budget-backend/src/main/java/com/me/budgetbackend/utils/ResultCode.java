@@ -15,4 +15,5 @@ public interface ResultCode {
     public static Integer GET_PIE_CHART_DATA_FAILED = 30011;
     public static Integer GET_BUDGET_LIST_FAILED = 30012;
     public static Integer GET_PROGRESS_FAILED = 30013;
+    public static Integer SET_BUDGET_INFO_FAILED = 50001;
 }
