@@ -31,7 +31,7 @@
     <div class="todoListSection">
       <el-timeline>
         <el-empty
-          v-if="todoItems.length === 0"
+          v-if="todoItems && todoItems.length === 0"
           description="暂无待办事项"
         ></el-empty>
         <el-timeline-item
@@ -104,7 +104,14 @@ export default {
   },
   watch: {
     "$store.state.todoLists": function (newVal, oldVal) {
-      this.todoItems = newVal;
+      if(newVal==undefined)
+      {
+        this.todoItems = [];
+      }
+      else
+      {
+        this.todoItems = newVal;
+      }
     },
   },
   created() {
