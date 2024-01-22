@@ -2,10 +2,10 @@
   <div class="mention-item">
     <i class="fa-solid fa-circle-exclamation"></i>
     <div class="mention-content">
-      <div class="mention-title">{{ mention.title }}</div>
-      <div class="mention-details">{{ mention.content }}</div>
+      <div class="mention-title">{{ mention.from_user_name }}</div>
+      <div class="mention-details">{{ mention.message }}</div>
     </div>
-    <div class="mention-time">{{ daysAgo(mention.createTime) }} 天前</div>
+    <div class="mention-time">{{ daysAgo(mention.created_at) }} 天前</div>
   </div>
 </template>
   

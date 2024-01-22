@@ -51,6 +51,7 @@ public class UserService {
             Notification notification = new Notification();
             notification.setUser_id((int) user1.getId().doubleValue());
             notification.setMessage("欢迎使用Budget");
+            notification.setFrom_user_name("系统");
             notification.setIs_read(false);
             notification.setCreated_at(new java.sql.Date(System.currentTimeMillis()));
             notificationMapper.insert(notification);
