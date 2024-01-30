@@ -128,9 +128,8 @@ export default {
         this.todoItems[this.activeItemIndex].completed = true;
         console.log("选择id是：" + this.todoItems[this.activeItemIndex].id);
         this.$http
-          .patch(`/user/todo/${this.todoItems[this.activeItemIndex].id}`, {
-            completed: true,
-            completedDate: new Date().toISOString(),
+          .post(`/user/todo/complete`, {
+            id: this.todoItems[this.activeItemIndex].id,
           })
           .then((res) => {
             console.log("完成待办事项：", res);
@@ -190,10 +189,7 @@ export default {
           this.$http
             .delete("/user/todo", {
               data: {
-                title: this.todoItems[index].title,
-                content: this.todoItems[index].content,
-                time: this.todoItems[index].time,
-                completed: this.todoItems[index].completed,
+                id: this.todoItems[index].id,
               },
             })
             .then((res) => {
@@ -215,6 +211,7 @@ export default {
             message: "删除取消",
           });
         });
+        //更新#store.state.todoLists
     },
   },
 };

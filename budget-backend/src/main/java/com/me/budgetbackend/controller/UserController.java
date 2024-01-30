@@ -12,9 +12,11 @@ import com.me.budgetbackend.service.UserService;
 import com.me.budgetbackend.utils.JwtUtils;
 import com.me.budgetbackend.utils.Result;
 import com.me.budgetbackend.utils.ResultCode;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,6 +194,32 @@ public class UserController {
             return Result.error(ResultCode.ADD_TODO_FAILED);
         }
     }
+
+    @DeleteMapping("/todo")
+    public Result deleteTodo(@RequestBody TodoListRecord todoListRecord, @RequestHeader("Authorization") String token)
+    {
+        try{
+            userService.deleteTodoById(todoListRecord.getId(), token);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(ResultCode.DELETE_TODO_LIST_FAILED);
+        }
+    }
+
+    @PostMapping("/todo/complete")
+    public Result completeTodo(@RequestBody TodoListRecord todoListRecord, @RequestHeader("Authorization") String token)
+    {
+        try{
+            userService.completeTodoById(todoListRecord.getId(), token);
+            Date date = new Date(System.currentTimeMillis());
+            Result result = Result.ok();
+            result.data("completed_Date", date);
+            return result;
+        } catch (Exception e) {
+            return Result.error(ResultCode.Set_TODO_LIST_FAILED);
+        }
+    }
+
 
     //分页查询
     @GetMapping("/findByPage")

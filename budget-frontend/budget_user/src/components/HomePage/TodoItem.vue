@@ -8,7 +8,7 @@
     <span :class="['description', { 'is-complete': checked }]">{{
       description
     }}</span>
-    <span class="date">{{ formatDate(date) }}</span>
+    <span class="date">{{ formatDate(completed_Date) }}</span>
     <el-dialog
       title="是否确定选择完成？"
       :visible.sync="dialogVisible"
@@ -16,7 +16,7 @@
     >
       <p>完成后不可更改！</p>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="clickCancel">取消</el-button>
         <el-button type="primary" @click="submitCompleted">确定</el-button>
       </span>
     </el-dialog>
@@ -34,7 +34,7 @@ export default {
     // 从父组件接收日期
     date: {
       type: String,
-      required: true,
+      required: false,
     },
     // 从父组件接受是否完成
     isCompleted: {
@@ -49,15 +49,10 @@ export default {
   },
   data() {
     return {
-      checked: this.isCompleted == false,
+      completed_Date: this.date,
+      checked: this.isCompleted,
       dialogVisible: false,
-      localCompletedDate: this.completedDate, // 本地状态
     };
-  },
-  watch: {
-    completedDate(newVal) {
-      this.localCompletedDate = newVal;
-    },
   },
   methods: {
     onCheckboxChange(value) {
@@ -72,18 +67,22 @@ export default {
     },
     submitCompleted() {
       this.$http
-        .patch(`/user/todo/${this.id}`, {
-          completed: true,
-          completedDate: new Date().toISOString(),
-        }).then((res) => {
+      .post(`/user/todo/complete`, {
+            id: this.id,
+          }).then((res) => {
           console.log("添加待办事项：", res);
           if (res.data.code === 20000) {
             this.$message.success("添加成功");
+            this.completed_Date = res.data.data.completed_Date;
           } else {
             this.$message.error(res.data.message);
           }
         });
       this.checked = true; // 确保勾选框被选中
+      this.dialogVisible = false;
+    },
+    clickCancel() {
+      this.checked = false; // 确保勾选框不被选中
       this.dialogVisible = false;
     },
   },

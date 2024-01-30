@@ -200,4 +200,23 @@ public class UserService {
             categoryMapper.insert(category);
         }
     }
+
+    public void deleteTodoById(Long id, String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        todoListRecordMapper.deleteById(id);
+    }
+
+    public void completeTodoById(Long id, String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        TodoListRecord todoListRecord = todoListRecordMapper.selectById(id);
+        todoListRecord.setCompleted(true);
+        todoListRecord.setCompleted_Date(new java.sql.Date(System.currentTimeMillis()));
+        todoListRecordMapper.completeById(todoListRecord);
+    }
 }

@@ -196,9 +196,9 @@ import Mock from 'mockjs'
 //     }
 // })
 //拦截/user/todo delete请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/todo', 'delete', {
-    "code": 20000,
-})
+// Mock.mock('http://localhost:8088/user/todo', 'delete', {
+//     "code": 20000,
+// })
 //拦截/user/todo/{id} patch请求,返回模拟数据,指定httpstatus为20000
 //id为todo的id，使用正则表达式匹配
 Mock.mock(/http:\/\/localhost:8088\/user\/todo\/\d+/, 'patch', {

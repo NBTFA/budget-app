@@ -9,7 +9,7 @@
             :key="index"
             :description="todo.description"
             :title="todo.title"
-            :date="todo.created_Date"
+            :date="todo.completed_Date"
             :isCompleted="todo.completed"
             :id="todo.id"
           ></todo-item>
