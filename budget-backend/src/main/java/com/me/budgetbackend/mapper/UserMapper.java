@@ -19,6 +19,9 @@ public interface UserMapper {
     @Select("select * from users where username = #{username} and password = #{password}")
     public User login(User user);
 
+    @Update("update users set last_login = #{last_login} where username = #{username}")
+    public void updateLastLoginByUsername(String last_login, String username);
+
     @Select("select * from users where username = #{username}")
     public User selectByUsername(String username);
 

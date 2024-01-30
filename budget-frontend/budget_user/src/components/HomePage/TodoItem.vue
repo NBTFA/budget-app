@@ -43,7 +43,7 @@ export default {
     },
     // 从父组件接收待办事项的id
     id: {
-      type: String,
+      type: Number,
       required: true,
     },
   },

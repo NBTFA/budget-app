@@ -5,6 +5,7 @@ import nonapi.io.github.classgraph.json.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
+import java.sql.Date;
 
 //链接数据库users表
 @Table(name = "users")
@@ -16,7 +17,7 @@ public class User {
     private String password;
     private String email;
     private String avatar;
-    private String created_at;
+    private Date created_at;
     private Integer total_budget;
     private Integer used_budget;
 
@@ -44,11 +45,11 @@ public class User {
         this.id = id;
     }
 
-    public String getCreated_at() {
+    public Date getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(String created_at) {
+    public void setCreated_at(Date created_at) {
         this.created_at = created_at;
     }
 

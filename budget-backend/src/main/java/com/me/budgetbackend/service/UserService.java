@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,6 +30,23 @@ public class UserService {
         User user1 = userMapper.login(user);
         if(user1 == null)
             throw new UserNotFoundException("未找到用户");
+        //获取当前时间
+        Date date = new Date();
+        java.sql.Date now = new java.sql.Date(date.getTime());
+        //获取用户的上次登录时间
+        java.sql.Date last_login = continuousRecordMapper.selectRecordDateByUserId(user1.getId());
+        //如果上次登录时间是昨天，那么连续登录天数加一
+        if(last_login != null && last_login.getTime() == now.getTime() - 24 * 60 * 60 * 1000)
+        {
+            continuousRecordMapper.updateCountByUserId(continuousRecordMapper.selectCountByUserId(user1.getId()) + 1, user1.getId());
+        }
+        //否则连续登录天数置为1
+        else
+        {
+            continuousRecordMapper.updateCountByUserId(1, user1.getId());
+        }
+        //更新用户的上次登录时间
+        continuousRecordMapper.updateRecordDateByUserId(now, user1.getId());
     }
 
     public void register(User user)
@@ -38,7 +56,7 @@ public class UserService {
         {
             user.setTotal_budget(-1);
             user.setUsed_budget(0);
-            user.setCreated_at(String.valueOf(new java.sql.Date(System.currentTimeMillis())));
+            user.setCreated_at(new java.sql.Date(System.currentTimeMillis()));
             userMapper.insert(user);
             user1 = userMapper.selectByUsername(user.getUsername());
 
@@ -155,7 +173,7 @@ public class UserService {
         if(BudgetRecordMapper.selectSumByUserId(user.getId())!=null)
             used = BudgetRecordMapper.selectSumByUserId(user.getId());
         int total = userMapper.selectTotalBudgetByUsername(username);
-        return used * 100 / total;
+        return total==0 ? 0 : used * 100 / total;
     }
 
     public void addTodo(TodoListRecord todoListRecord, String token) {

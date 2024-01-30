@@ -132,7 +132,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("/todoRequest")
+    @GetMapping("/budgetRequest")
     public Result processTodoRequest(@RequestHeader("Authorization") String token)
     {
         try{
@@ -157,7 +157,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/historyRequest")
+    @GetMapping("/todoRequest")
     public Result processHistoryRequest(@RequestHeader("Authorization") String token)
     {
         try{

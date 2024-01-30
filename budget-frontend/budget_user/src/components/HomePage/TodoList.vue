@@ -7,8 +7,9 @@
           <todo-item
             v-for="(todo, index) in todos"
             :key="index"
-            :description="todo.title"
-            :date="todo.time"
+            :description="todo.description"
+            :title="todo.title"
+            :date="todo.created_Date"
             :isCompleted="todo.completed"
             :id="todo.id"
           ></todo-item>

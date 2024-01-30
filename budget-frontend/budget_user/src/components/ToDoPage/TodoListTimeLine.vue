@@ -37,7 +37,7 @@
         <el-timeline-item
           v-for="(item, index) in todoItems"
           :key="item.id"
-          :timestamp="item.time"
+          :timestamp="item.created_Date"
           placement="top"
           :color="item.completed ? 'green' : 'gray'"
           :icon="
@@ -47,7 +47,7 @@
           <el-card>
             <div class="content">
               <h4>{{ item.title }}</h4>
-              <p>{{ item.content }}</p>
+              <p>{{ item.description }}</p>
             </div>
             <div class="completeButton">
               <el-button
@@ -152,9 +152,11 @@ export default {
       this.$http
         .post("/user/todo", {
           title: this.todoItem.title,
-          content: this.todoItem.content,
           time: this.todoItem.date,
           completed: false,
+          completed_Date: "",
+          created_Date: this.todoItem.date,
+          description: this.todoItem.content
         })
         .then((res) => {
           console.log("添加待办事项：", res);
