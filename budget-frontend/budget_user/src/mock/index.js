@@ -205,22 +205,22 @@ Mock.mock(/http:\/\/localhost:8088\/user\/todo\/\d+/, 'patch', {
     "code": 20000,
 })
 //拦截/user/budget?id=111 delete请求,返回模拟数据,指定httpstatus为20000
-Mock.mock('http://localhost:8088/user/budget', 'delete', {
-    "code": 20000,
-})
-//拦截/user/budget/add post请求,返回模拟数据,指定httpstatus为20000
-//格式为{ id, date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
-Mock.mock('http://localhost:8088/user/budget/add', 'post', {
-    "code": 20000,
-    "budget": {
-        "id": "@id",
-        "date": "@date('yyyy-MM-dd')",
-        "name": "新加的",
-        "category": "@cname",
-        "amount": "@integer(0,100)",
-        "income": "@boolean"
-    }
-})
+// Mock.mock('http://localhost:8088/user/budget', 'delete', {
+//     "code": 20000,
+// })
+// //拦截/user/budget/add post请求,返回模拟数据,指定httpstatus为20000
+// //格式为{ id, date: '2020-01-01', name: '项目A', category: '分类1', amount: 1000, income: true }
+// Mock.mock('http://localhost:8088/user/budget/add', 'post', {
+//     "code": 20000,
+//     "budget": {
+//         "id": "@id",
+//         "date": "@date('yyyy-MM-dd')",
+//         "name": "新加的",
+//         "category": "@cname",
+//         "amount": "@integer(0,100)",
+//         "income": "@boolean"
+//     }
+// })
 //拦截/user/budget/health get请求,返回模拟数据,指定httpstatus为20000
 Mock.mock('http://localhost:8088/user/budget/health', 'get', {
     "code": 20000,

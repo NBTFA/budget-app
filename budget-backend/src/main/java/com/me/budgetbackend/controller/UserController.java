@@ -134,7 +134,7 @@ public class UserController {
         return result;
     }
 
-    @GetMapping("/budgetRequest")
+    @GetMapping("/historyRequest")
     public Result processTodoRequest(@RequestHeader("Authorization") String token)
     {
         try{
@@ -217,6 +217,26 @@ public class UserController {
             return result;
         } catch (Exception e) {
             return Result.error(ResultCode.Set_TODO_LIST_FAILED);
+        }
+    }
+
+    @PostMapping("/budget")
+    public Result addBudget(@RequestBody BudgetRecord budgetRecord, @RequestHeader("Authorization") String token)
+    {
+            BudgetRecord bR = userService.addBudget(budgetRecord, token);
+            Result result = Result.ok();
+            result.data("budgetRecord", bR);
+            return result;
+    }
+
+    @DeleteMapping("/budget")
+    public Result deleteBudget(@RequestBody BudgetRecord budgetRecord, @RequestHeader("Authorization") String token)
+    {
+        try{
+            userService.deleteBudgetById(budgetRecord.getId(), token);
+            return Result.ok();
+        } catch (Exception e) {
+            return Result.error(ResultCode.DELETE_TODO_LIST_FAILED);
         }
     }
 

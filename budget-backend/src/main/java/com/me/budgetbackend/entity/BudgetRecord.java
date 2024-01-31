@@ -9,7 +9,7 @@ public class BudgetRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer user_id;
+    private Long user_id;
     private Date record_date;
     private String name;
     private Integer amount;
@@ -18,11 +18,19 @@ public class BudgetRecord {
     private Boolean gain;
     private String tags;
 
-    public Integer getUser_id() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUser_id() {
         return user_id;
     }
 
-    public void setUser_id(Integer user_id) {
+    public void setUser_id(Long user_id) {
         this.user_id = user_id;
     }
 
@@ -80,5 +88,20 @@ public class BudgetRecord {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "BudgetRecord{" +
+                "id=" + id +
+                ", user_id=" + user_id +
+                ", record_date=" + record_date +
+                ", name='" + name + '\'' +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", category='" + category + '\'' +
+                ", gain=" + gain +
+                ", tags='" + tags + '\'' +
+                '}';
     }
 }

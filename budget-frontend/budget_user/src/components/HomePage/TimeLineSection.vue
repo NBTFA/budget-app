@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-button-group>
+    <!-- <el-button-group>
       <el-button :type="timeframe === 'year' ? 'primary' : 'default'" @click="setTimeFrame('year')">按年显示</el-button>
       <el-button :type="timeframe === 'month' ? 'primary' : 'default'" @click="setTimeFrame('month')">按月显示</el-button>
-    </el-button-group>
+    </el-button-group> -->
     <timeline-chart v-if="dataLoaded" :data="data" @point-clicked="showDetails" />
   </div>
 </template>
@@ -38,7 +38,8 @@ export default {
       this.data = this.$store.state.budgets; // 从 store 中获取数据
     },
     showDetails(point) {
-      this.$message.info(`${point.name}：${point.value}元`);
+      const gainString = point.gain ? '收入' : '支出';
+      this.$message.info(`在${point.name}上${gainString}：${point.amount}元`);
     },
   },
   created() {

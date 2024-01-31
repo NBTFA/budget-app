@@ -5,6 +5,7 @@ import com.me.budgetbackend.exceptions.UserAlreadyExistException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.*;
 import com.me.budgetbackend.utils.JwtUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class UserService {
     @Autowired
     private NotificationMapper notificationMapper;
     @Autowired
-    private BudgetRecordMapper BudgetRecordMapper;
+    private BudgetRecordMapper budgetRecordMapper;
     @Autowired
     private CategoryMapper categoryMapper;
     public void login(User user) {
@@ -146,10 +147,10 @@ public class UserService {
         if (user == null)
             throw new UserNotFoundException("未找到用户");
         List<PieChartData> pieChartDataList = new ArrayList<>();
-        List<String> categories = BudgetRecordMapper.selectCategoryByUserId(user.getId());
+        List<String> categories = budgetRecordMapper.selectCategoryByUserId(user.getId());
         for(String category : categories)
         {
-            int sum = BudgetRecordMapper.selectSumByCategory(user.getId(), category);
+            int sum = budgetRecordMapper.selectSumByCategory(user.getId(), category);
             PieChartData pieChartData = new PieChartData(category, sum);
             pieChartDataList.add(pieChartData);
         }
@@ -161,7 +162,7 @@ public class UserService {
         User user = userMapper.selectByUsername(username);
         if (user == null)
             throw new UserNotFoundException("未找到用户");
-        return BudgetRecordMapper.selectBudgetRecordByUserId(user.getId());
+        return budgetRecordMapper.selectBudgetRecordByUserId(user.getId());
     }
 
     public int getProgress(String token) {
@@ -170,8 +171,8 @@ public class UserService {
         if (user == null)
             throw new UserNotFoundException("未找到用户");
         int used = 0;
-        if(BudgetRecordMapper.selectSumByUserId(user.getId())!=null)
-            used = BudgetRecordMapper.selectSumByUserId(user.getId());
+        if(budgetRecordMapper.selectSumByUserId(user.getId())!=null)
+            used = budgetRecordMapper.selectSumByUserId(user.getId());
         int total = userMapper.selectTotalBudgetByUsername(username);
         return total==0 ? 0 : used * 100 / total;
     }
@@ -218,5 +219,26 @@ public class UserService {
         todoListRecord.setCompleted(true);
         todoListRecord.setCompleted_Date(new java.sql.Date(System.currentTimeMillis()));
         todoListRecordMapper.completeById(todoListRecord);
+    }
+
+    public BudgetRecord addBudget(BudgetRecord budgetRecord, String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        budgetRecord.setUser_id(user.getId());
+        budgetRecordMapper.insert(budgetRecord);
+        BudgetRecord bR = budgetRecordMapper.selectLatestBudgetRecordByUserId(user.getId());
+        Logger logger = org.slf4j.LoggerFactory.getLogger(UserService.class);
+        logger.info(bR.getId().toString());
+        return bR;
+    }
+
+    public void deleteBudgetById(Long id, String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        budgetRecordMapper.deleteById(id);
     }
 }

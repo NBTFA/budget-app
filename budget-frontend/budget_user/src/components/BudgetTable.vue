@@ -27,10 +27,10 @@
               <span>{{ props.row.name }}</span>
             </el-form-item>
             <el-form-item label="日期">
-              <span>{{ props.row.date }}</span>
+              <span>{{ props.row.record_date }}</span>
             </el-form-item>
             <el-form-item label="收支">
-              <span>{{ props.row.gain }}</span>
+              <span>{{ props.row.gain ? "收入" : "支出" }}</span>
             </el-form-item>
             <el-form-item label="分类">
               <span>{{ props.row.category }}</span>
@@ -41,17 +41,21 @@
             <el-form-item label="金额">
               <span>{{ props.row.amount }}</span>
             </el-form-item>
-            <el-form-item label="Tags">
+            <!-- <el-form-item label="Tags">
               <el-tag v-for="tag in props.row.tags" :key="tag">
                 {{ tag }}
               </el-tag>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
         </template>
       </el-table-column>
 
       <!-- 数据列 -->
-      <el-table-column prop="date" label="日期" width="120"></el-table-column>
+      <el-table-column
+        prop="record_date"
+        label="日期"
+        width="120"
+      ></el-table-column>
       <el-table-column
         prop="name"
         label="商品名称"
@@ -62,9 +66,13 @@
         label="分类"
         width="120"
       ></el-table-column>
-      <el-table-column prop="gain" label="收支" width="100"></el-table-column>
+      <el-table-column label="收支" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.gain ? "收入" : "支出" }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="amount" label="金额" width="100"></el-table-column>
-      <el-table-column label="Tag">
+      <!-- <el-table-column label="Tag">
         <template slot-scope="scope">
           <div v-for="tag in scope.row.tags" :key="tag" class="table-tag">
             <el-tag closable @close="handleTagClose(scope.$index, tag)">
@@ -84,10 +92,15 @@
             >+ 新标签</el-button
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="confirmDelete(scope.$index, scope.row)">删除</el-button>
+          <el-button
+            type="danger"
+            size="small"
+            @click="confirmDelete(scope.$index, scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -114,7 +127,7 @@ export default {
         // 表格原始数据
         // 示例数据
         {
-          date: "2023-12-25",
+          record_date: "2023-12-25",
           name: "商品A",
           category: "类别1",
           description: "商品A的描述",
@@ -138,7 +151,7 @@ export default {
   },
   computed: {
     budgets() {
-        return this.$store.state.budgets;
+      return this.$store.state.budgets;
     },
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.budgets;
@@ -179,18 +192,20 @@ export default {
     handleDelete() {
       this.tableData.splice(this.deleteIndex, 1);
       // 这里可以添加与服务器的交互逻辑
-      this.$http.delete("/user/budget", {
-        params: {
-          id: this.deleteRow.id,
-        },
-      }).then((res) => {
-        console.log("删除预算：", res);
-        if (res.data.code === 20000) {
-          this.$message.success("删除成功");
-        } else {
-          this.$message.error(res.data.message);
-        }
-      });
+      this.$http
+        .delete("/user/budget", {
+          data: {
+            id: this.deleteRow.id,
+          },
+        })
+        .then((res) => {
+          console.log("删除预算：", res);
+          if (res.data.code === 20000) {
+            this.$message.success("删除成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       console.log(`删除了行: ${this.deleteRow.name}`);
       this.resetDeleteConfirmation();
       this.$store.commit("setBudgets", this.tableData);
@@ -205,7 +220,7 @@ export default {
     filterByDate() {
       if (this.selectedDate) {
         this.filteredByDateData = this.tableData.filter(
-          (item) => item.date === this.selectedDate
+          (item) => item.record_date === this.selectedDate
         );
       } else {
         this.filteredByDateData = this.tableData;

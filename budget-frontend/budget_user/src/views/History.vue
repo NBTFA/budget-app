@@ -17,7 +17,7 @@
       <el-form ref="budgetForm" :model="budgetForm">
         <el-form-item label="日期">
           <el-date-picker
-            v-model="budgetForm.date"
+            v-model="budgetForm.record_date"
             type="date"
             placeholder="选择日期"
             format="yyyy-MM-dd"
@@ -31,15 +31,18 @@
         <el-form-item label="类别">
           <el-input v-model="budgetForm.category"></el-input>
         </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="budgetForm.description"></el-input>
+        </el-form-item>
         <el-form-item label="金额">
           <el-input-number
             v-model="budgetForm.amount"
             :min="0"
-            :max="100"
+            :max="999999"
           ></el-input-number>
         </el-form-item>
         <el-form-item label="收入">
-          <el-switch v-model="budgetForm.income"></el-switch>
+          <el-switch v-model="budgetForm.gain"></el-switch>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -61,11 +64,12 @@ export default {
     return {
       dialogVisible: false,
       budgetForm: {
-        date: "",
+        record_date: "",
         name: "",
         category: "",
         amount: 0,
-        income: false,
+        gain: false,
+        description: "",
       },
     };
   },
@@ -87,13 +91,13 @@ export default {
     submitBudget() {
       console.log("预算信息：", this.budgetForm);
       // 这里可以添加预算逻辑
-      this.$http.post("/user/budget/add", this.budgetForm).then((res) => {
+      this.$http.post("/user/budget", this.budgetForm).then((res) => {
         console.log("预算结果：", res);
         if (res.data.code === 20000) {
           this.$message.success("添加成功");
           this.dialogVisible = false;
           this.$refs.budgetForm.resetFields();
-          this.$store.dispatch("addBudget", res.data.budget);
+          this.$store.dispatch("addBudget", res.data.data.budgetRecord);
         } else {
           this.$message.error("添加失败");
         }
