@@ -6,7 +6,9 @@ public interface ResultCode {
     public static Integer SUCCESS = 20000;
     public static Integer ERROR = 20001;
     public static Integer USER_NOT_FOUND = 20002;
+    public static Integer ADMIN_NOT_FOUND = 21002;
     public static Integer USER_ALREADY_EXISTS = 20003;
+    public static Integer ADMIN_ALREADY_EXISTS = 21003;
     public static Integer ADD_TODO_FAILED = 20004;
     public static Integer GET_AVATAR_FAILED = 30005;
     public static Integer GET_NOTIFICATION_FAILED = 30006;
