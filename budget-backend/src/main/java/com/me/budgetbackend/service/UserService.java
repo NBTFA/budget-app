@@ -31,18 +31,21 @@ public class UserService {
         User user1 = userMapper.login(user);
         if(user1 == null)
             throw new UserNotFoundException("未找到用户");
-        //获取当前时间
+        //获取当前日期
         Date date = new Date();
         java.sql.Date now = new java.sql.Date(date.getTime());
         //获取用户的上次登录时间
         java.sql.Date last_login = continuousRecordMapper.selectRecordDateByUserId(user1.getId());
+        long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(last_login.toLocalDate(), now.toLocalDate());
+        Logger logger = org.slf4j.LoggerFactory.getLogger(UserService.class);
+        logger.info("相差："+String.valueOf(daysBetween)+"天");
         //如果上次登录时间是昨天，那么连续登录天数加一
-        if(last_login != null && last_login.getTime() == now.getTime() - 24 * 60 * 60 * 1000)
+        if(last_login != null && daysBetween==1)
         {
             continuousRecordMapper.updateCountByUserId(continuousRecordMapper.selectCountByUserId(user1.getId()) + 1, user1.getId());
         }
         //否则连续登录天数置为1
-        else
+        else if(last_login != null && daysBetween>1)
         {
             continuousRecordMapper.updateCountByUserId(1, user1.getId());
         }
