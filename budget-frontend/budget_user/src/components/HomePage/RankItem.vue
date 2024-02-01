@@ -1,7 +1,8 @@
 <template>
     <div class="rank-item">
       <span class="rank">{{ user.rank }}</span>
-      <img :src="user.avatar" alt="Avatar" class="avatar" />
+      <el-avatar src = "https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+      <!-- <img :src="user.avatar" alt="Avatar" class="avatar" /> -->
       <span class="username">{{ user.username }}</span>
       <i class="fa-solid fa-fire fire-icon"></i>
       <span class="record">{{ user.continuousRecord }}</span>
@@ -29,17 +30,11 @@
   }
   
   .rank {
-    font-size: 1em;
+    font-size: 20px;
     margin-right: 10px; /* 保持与头像的间距 */
     font-weight: bold;
   }
   
-  .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
   
   .username {
     margin-right: auto;

@@ -94,7 +94,7 @@ public class UserController {
         }
 
         try {
-            List<User> rankUsers = userService.getRankList(token);
+            List<RankUser> rankUsers = userService.getRankList(token);
             result.data("rankUsers", rankUsers);
         } catch (Exception e) {
             return Result.error(ResultCode.GET_RANK_USERS_FAILED);

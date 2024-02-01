@@ -89,9 +89,9 @@ public class UserService {
         return user.getAvatar();
     }
 
-    public List<User> getRankList(String token)
+    public List<RankUser> getRankList(String token)
     {
-        List<User> users = new ArrayList<>();
+        List<RankUser> users = new ArrayList<>();
         String username = JwtUtils.getClaimsByToken(token).getSubject();
         User user = userMapper.selectByUsername(username);
         if(user == null)
@@ -99,7 +99,9 @@ public class UserService {
         Integer[] list = continuousRecordMapper.selectTopFiveUserId();
         for(Integer i : list)
         {
-            users.add(userMapper.selectById(i));
+            RankUser rankUser = new RankUser(userMapper.selectById(i),
+                    i, continuousRecordMapper.selectCountByUserId(i.longValue()));
+            users.add(rankUser);
         }
         return users;
     }

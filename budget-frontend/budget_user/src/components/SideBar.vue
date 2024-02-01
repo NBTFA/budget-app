@@ -1,6 +1,9 @@
 <template>
     <el-aside width="200px">
       <div class="rank-section">
+        <div class="rank-title">
+          <h1>排行榜</h1>
+        </div>
         <rank-item
           v-for="(user, index) in limitedRankUsers"
           :key="index"
@@ -46,6 +49,9 @@
   </script>
   
   <style scoped>
+  .rank-title {
+    font-size: 24px;
+  }
   .el-aside {
     display: flex;
     flex-direction: column;
