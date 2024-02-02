@@ -18,6 +18,16 @@ public class Administrator {
     private String avatar;
     private Date created_at;
 
+    private Boolean root;
+
+    public Boolean getRoot() {
+        return root;
+    }
+
+    public void setRoot(Boolean root) {
+        this.root = root;
+    }
+
     public Long getId() {
         return id;
     }
