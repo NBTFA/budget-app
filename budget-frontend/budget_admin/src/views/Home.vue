@@ -25,7 +25,7 @@
                 group-separator=","
                 :precision="1"
                 decimal-separator="."
-                :value="100000"
+                :value="this.allData.newUserNum"
                 :title="title"
               >
                 <template slot="prefix">
@@ -49,7 +49,7 @@
                 group-separator=","
                 :precision="1"
                 decimal-separator="."
-                :value="100000"
+                :value="this.allData.totalUserNum"
                 :title="title1"
               >
                 <template slot="prefix">
@@ -73,7 +73,7 @@
                 group-separator=","
                 :precision="1"
                 decimal-separator="."
-                :value="100000"
+                :value="this.allData.budgetRecordNum"
                 :title="title2"
               >
                 <template slot="prefix">
@@ -130,8 +130,38 @@ export default {
           { date: "2022-01-01", value: 200 },
           // 更多数据...
         ],
+        newUserNum: 0,
+        totalUserNum: 0,
+        budgetRecordNum: 0,
       },
     };
+  },
+  created() {
+    this.$http.get("/admin/serverStat").then((res) => {
+      console.log("homeRequest: ", res);
+      if (res.data.code === 20000) {
+        this.allData.newUsers = res.data.data.newUsers;
+        this.allData.newUserNum = this.allData.newUsers[
+          this.allData.newUsers.length - 1
+        ].value;
+        // console.log("newUsers: ", this.allData.newUsers);
+        this.changeData("newUsers");
+
+        this.allData.totalUsers = res.data.data.totalUsers;
+        this.allData.totalUserNum = this.allData.totalUsers[
+          this.allData.totalUsers.length - 1
+        ].value;
+        this.changeData("totalUsers");
+
+        this.allData.budgetRecords = res.data.data.totalRecords;
+        this.allData.budgetRecordNum = this.allData.budgetRecords[
+          this.allData.budgetRecords.length - 1
+        ].value;
+        this.changeData("budgetRecords");
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
   mounted() {
     this.changeData(this.currentData);
