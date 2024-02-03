@@ -14,7 +14,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.HashMap;
 
-//地址localhost:8080/swagger-ui/
+//地址localhost:8088/swagger-ui/
 @Configuration
 public class SwaggerConfig {
     @Bean
