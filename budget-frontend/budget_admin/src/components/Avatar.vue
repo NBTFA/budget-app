@@ -2,7 +2,7 @@
   <div class="menu-right">
     <el-dropdown @command="handleCommand">
       <span class="avatar-wrapper">
-        <el-avatar icon="el-icon-user-solid" :size="50" :src="url"></el-avatar>
+        <el-avatar icon="el-icon-user-solid" :size="50" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
       </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="logout">退出</el-dropdown-item>
