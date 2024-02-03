@@ -166,6 +166,17 @@ export default {
       currentRoot: false, //当前用户是否为root
     };
   },
+  created() {
+    // this.currentRoot = this.$store.state.user.root;
+    if(!this.currentRoot)
+    {
+      this.$notify({
+        title: '警告',
+        message: '您不是超级管理员，无法进行修改和删除操作',
+        type: 'warning'
+      });
+    }
+  },
   computed: {
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.tableData;
