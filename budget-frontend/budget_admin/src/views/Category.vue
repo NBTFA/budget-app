@@ -35,31 +35,7 @@
             label="类别"
             width="300"
           ></el-table-column>
-          
-          <el-table-column label="操作" width="200">
-            <template slot-scope="scope">
-
-              <el-button
-                type="danger"
-                size="small"
-                @click="confirmDelete(scope.$index, scope.row)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
         </el-table>
-        <el-dialog
-          title="确认删除"
-          :visible.sync="dialogVisible"
-          width="30%"
-          @close="resetDeleteConfirmation"
-        >
-          <span>确定要删除这项记录吗？</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="handleDelete">确定</el-button>
-          </span>
-        </el-dialog>
         
       </el-main>
     </el-container>
@@ -94,6 +70,16 @@ export default {
       deleteRow: null, // 要删除的行的数据
     };
   },
+  created() {
+    this.$http.get("/admin/categoryRequest").then((res) => {
+      console.log("categoryRequest: ", res);
+      if (res.data.code === 20000) {
+        this.tableData = res.data.data.categories;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
+  },
   computed: {
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.tableData;
@@ -111,42 +97,6 @@ export default {
     },
   },
   methods: {
-
-    confirmDelete(index, row) {
-      this.dialogVisible = true;
-      this.deleteIndex = index;
-      this.deleteRow = row;
-    },
-
-    // 处理删除操作
-    handleDelete() {
-      this.tableData.splice(this.deleteIndex, 1);
-      // 这里可以添加与服务器的交互逻辑
-      //   this.$http
-      //     .delete("/user/budget", {
-      //       data: {
-      //         id: this.deleteRow.id,
-      //       },
-      //     })
-      //     .then((res) => {
-      //       console.log("删除预算：", res);
-      //       if (res.data.code === 20000) {
-      //         this.$message.success("删除成功");
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
-      console.log(`删除了行: ${this.deleteRow.name}`);
-      this.resetDeleteConfirmation();
-      //   this.$store.commit("setBudgets", this.tableData);
-    },
-
-    // 重置删除确认
-    resetDeleteConfirmation() {
-      this.dialogVisible = false;
-      this.deleteIndex = null;
-      this.deleteRow = null;
-    },
     
   },
 };

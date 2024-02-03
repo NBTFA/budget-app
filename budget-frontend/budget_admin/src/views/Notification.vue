@@ -124,7 +124,12 @@
             <el-button @click="sendMessageDialogVisible = false"
               >取消</el-button
             >
-            <el-button type="primary" @click="handleSendMessage" :disabled="!sendMessageFormData.message || !sendMessageFormData.user_id"
+            <el-button
+              type="primary"
+              @click="handleSendMessage"
+              :disabled="
+                !sendMessageFormData.message || !sendMessageFormData.user_id
+              "
               >发送</el-button
             >
           </span>
@@ -144,7 +149,10 @@
             <el-button @click="broadcastMessageDialogVisible = false"
               >取消</el-button
             >
-            <el-button type="primary" @click="handleBroadcastMessage" :disabled="!broadcastMessage"
+            <el-button
+              type="primary"
+              @click="handleBroadcastMessage"
+              :disabled="!broadcastMessage"
               >发送</el-button
             >
           </span>
@@ -191,12 +199,21 @@ export default {
       },
       broadcastMessage: "",
       users: [
-        // 示例数据，实际情况下应从服务器获取
         { id: 1, username: "user1" },
         { id: 2, username: "user2" },
-        // 添加更多用户...
       ],
     };
+  },
+  created() {
+    this.$http.get("/admin/notification").then((res) => {
+      console.log("通知列表：", res);
+      if (res.data.code === 20000) {
+        this.tableData = res.data.data.notifications;
+        this.users = res.data.data.users;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
   computed: {
     user_idError() {
@@ -255,21 +272,20 @@ export default {
     // 处理删除操作
     handleDelete() {
       this.tableData.splice(this.deleteIndex, 1);
-      // 这里可以添加与服务器的交互逻辑
-      //   this.$http
-      //     .delete("/user/budget", {
-      //       data: {
-      //         id: this.deleteRow.id,
-      //       },
-      //     })
-      //     .then((res) => {
-      //       console.log("删除预算：", res);
-      //       if (res.data.code === 20000) {
-      //         this.$message.success("删除成功");
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
+      this.$http
+        .delete("/admin/notification", {
+          data: {
+            id: this.deleteRow.id,
+          },
+        })
+        .then((res) => {
+          console.log("删除通知：", res);
+          if (res.data.code === 20000) {
+            this.$message.success("删除成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       console.log(`删除了行: ${this.deleteRow.name}`);
       this.resetDeleteConfirmation();
       //   this.$store.commit("setBudgets", this.tableData);
@@ -294,16 +310,36 @@ export default {
       // 处理发送消息逻辑
       console.log("发送消息", this.sendMessageFormData);
       // 发送消息到服务器...
+      this.$http
+        .post("/admin/sendToUser", this.sendMessageFormData)
+        .then((res) => {
+          console.log("更新用户：", res);
+          if (res.data.code === 20000) {
+            this.$message.success("更新成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       this.$message.success("发送成功");
       this.sendMessageDialogVisible = false;
+      window.location.reload();
     },
 
     handleBroadcastMessage() {
       // 处理群发消息逻辑
       console.log("群发消息", this.broadcastMessage);
       // 发送消息到服务器...
+      this.$http.post("/admin/sendToAll", this.broadcastMessage).then((res) => {
+        console.log("更新用户：", res);
+        if (res.data.code === 20000) {
+          this.$message.success("更新成功");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
       this.$message.success("发送成功");
       this.broadcastMessageDialogVisible = false;
+      window.location.reload();
     },
 
     // 重置对话框和表单数据

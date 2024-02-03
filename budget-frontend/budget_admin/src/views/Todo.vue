@@ -124,6 +124,16 @@ export default {
       deleteRow: null, // 要删除的行的数据
     };
   },
+  created() {
+    this.$http.get("/admin/todoRequest").then((res) => {
+      console.log("todoRequest: ", res);
+      if (res.data.code === 20000) {
+        this.tableData = res.data.data.todoLists;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
+  },
   computed: {
     filteredData() {
       let data = this.selectedDate ? this.filteredByDateData : this.tableData;
@@ -160,21 +170,20 @@ export default {
     // 处理删除操作
     handleDelete() {
       this.tableData.splice(this.deleteIndex, 1);
-      // 这里可以添加与服务器的交互逻辑
-      //   this.$http
-      //     .delete("/user/budget", {
-      //       data: {
-      //         id: this.deleteRow.id,
-      //       },
-      //     })
-      //     .then((res) => {
-      //       console.log("删除预算：", res);
-      //       if (res.data.code === 20000) {
-      //         this.$message.success("删除成功");
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
+        this.$http
+          .delete("/admin/todo", {
+            data: {
+              id: this.deleteRow.id,
+            },
+          })
+          .then((res) => {
+            console.log("删除待办：", res);
+            if (res.data.code === 20000) {
+              this.$message.success("删除成功");
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
       console.log(`删除了行: ${this.deleteRow.name}`);
       this.resetDeleteConfirmation();
       //   this.$store.commit("setBudgets", this.tableData);

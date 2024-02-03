@@ -178,6 +178,17 @@ export default {
       return data;
     },
   },
+  created() {
+    this.$http.get("/admin/user").then((res) => {
+      console.log("userRequest: ", res);
+      if (res.data.code === 20000) {
+        this.tableData = res.data.data.users;
+        this.filteredByDateData = this.tableData;
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
+  },
   methods: {
     filterByDate() {
       if (this.selectedDate) {
@@ -200,21 +211,20 @@ export default {
     // 处理删除操作
     handleDelete() {
       this.tableData.splice(this.deleteIndex, 1);
-      // 这里可以添加与服务器的交互逻辑
-      //   this.$http
-      //     .delete("/user/budget", {
-      //       data: {
-      //         id: this.deleteRow.id,
-      //       },
-      //     })
-      //     .then((res) => {
-      //       console.log("删除预算：", res);
-      //       if (res.data.code === 20000) {
-      //         this.$message.success("删除成功");
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
+      this.$http
+        .delete("/admin/user", {
+          data: {
+            id: this.deleteRow.id,
+          },
+        })
+        .then((res) => {
+          console.log("删除预算：", res);
+          if (res.data.code === 20000) {
+            this.$message.success("删除成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       console.log(`删除了行: ${this.deleteRow.name}`);
       this.resetDeleteConfirmation();
       //   this.$store.commit("setBudgets", this.tableData);
@@ -242,7 +252,14 @@ export default {
       }
       this.editDialogVisible = false; // 关闭对话框
       console.log("更新数据", this.editFormData);
-      // 可选：重置表单或发送更新到服务器
+      this.$http.post("/admin/user", this.editFormData).then((res) => {
+        console.log("更新用户：", res);
+        if (res.data.code === 20000) {
+          this.$message.success("更新成功");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
       this.resetEditForm();
     },
 

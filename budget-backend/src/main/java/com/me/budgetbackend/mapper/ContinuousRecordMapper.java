@@ -1,9 +1,12 @@
 package com.me.budgetbackend.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Select;
 import com.me.budgetbackend.entity.ContinuousRecord;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface ContinuousRecordMapper {
@@ -24,4 +27,9 @@ public interface ContinuousRecordMapper {
 
     @Update("update ContinuousRecords set record_date = #{record_date} where user_id = #{user_id}")
     public void updateRecordDateByUserId(java.sql.Date record_date, Long user_id);
+
+    @Result(column = "user_id", property = "user_id")
+    @Result(column = "record_date", property = "record_date")
+    @Select("select * from ContinuousRecords")
+    public List<ContinuousRecord> selectAll();
 }

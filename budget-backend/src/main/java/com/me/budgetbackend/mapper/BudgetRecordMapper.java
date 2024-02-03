@@ -12,6 +12,11 @@ public interface BudgetRecordMapper {
     @Select("select * from BudgetRecords where user_id = #{user_id} order by record_date desc")
     public List<BudgetRecord> selectBudgetRecordByUserId(Long user_id);
 
+    @Result(column = "record_date", property = "record_date")
+    @Result(column = "user_id", property = "user_id")
+    @Select("select * from BudgetRecords")
+    public List<BudgetRecord> selectAll();
+
     //返回最新添加的一条数据
     @Result(column = "record_date", property = "record_date")
     @Result(column = "user_id", property = "user_id")

@@ -60,5 +60,198 @@ public class AdministratorController {
             return Result.error(ResultCode.ADMIN_NOT_FOUND);
         }
     }
-    
+
+    @GetMapping("/user")
+    public Result getUser(@RequestHeader("Authorization") String token)
+    {
+        try {
+            List<User> users = administratorService.getUser(token);
+            Result result = Result.ok();
+            result.data("users", users);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/user")
+    public Result deleteUser(@RequestHeader("Authorization") String token, @RequestBody User user)
+    {
+        try {
+            administratorService.deleteUser(token, user);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/user")
+    public Result updateUser(@RequestHeader("Authorization") String token, @RequestBody User user)
+    {
+        try {
+            administratorService.updateUser(token, user);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/adminRequest")
+    public Result processAdminRequest(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            result.data("admins", administratorService.getAdmins(token));
+            result.data("isRoot", administratorService.getCurrentAdminAuthority(token));
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/admin")
+    public Result deleteAdmin(@RequestHeader("Authorization") String token, @RequestBody Administrator admin)
+    {
+        try {
+            administratorService.deleteAdmin(token, admin);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/admin")
+    public Result updateAdmin(@RequestHeader("Authorization") String token, @RequestBody Administrator admin)
+    {
+        try {
+            administratorService.updateAdmin(token, admin);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/sendToUser")
+    public Result sendToUser(@RequestHeader("Authorization") String token, @RequestBody SendToUserRequest request)
+    {
+        try {
+            administratorService.sendToUser(token, request);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        } catch (UserNotFoundException e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/sendToAll")
+    public Result sendToAll(@RequestHeader("Authorization") String token, @RequestBody String message)
+    {
+        try {
+            administratorService.sendToAll(token, message);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/notification")
+    public Result deleteNotification(@RequestHeader("Authorization") String token, @RequestBody Notification notification)
+    {
+        try {
+            administratorService.deleteNotification(token, notification);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/notification")
+    public Result getNotification(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            List<Notification> notifications = administratorService.getNotification(token);
+            List<User> users = administratorService.getUser(token);
+            result.data("notifications", notifications);
+            result.data("users", users);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/categoryRequest")
+    public Result getCategory(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            List<Category> categories = administratorService.getCategory(token);
+            result.data("categories", categories);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/continuousRequest")
+    public Result getContinuous(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            List<ContinuousRecord> continuousStats = administratorService.getContinuous(token);
+            result.data("continuousRecords", continuousStats);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/budgetRequest")
+    public Result getBudget(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            List<BudgetRecord> budgets = administratorService.getBudget(token);
+            result.data("budgets", budgets);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/budget")
+    public Result deleteBudget(@RequestHeader("Authorization") String token, @RequestBody BudgetRecord budget)
+    {
+        try {
+            administratorService.deleteBudget(token, budget);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/todoRequest")
+    public Result getTodoList(@RequestHeader("Authorization") String token)
+    {
+        try {
+            Result result = Result.ok();
+            List<TodoListRecord> todos = administratorService.getTodoList(token);
+            result.data("todoLists", todos);
+            return result;
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/todo")
+    public Result deleteTodoList(@RequestHeader("Authorization") String token, @RequestBody TodoListRecord todo)
+    {
+        try {
+            administratorService.deleteTodoList(token, todo);
+            return Result.ok();
+        } catch (AdminNotFoundException e) {
+            return Result.error(ResultCode.ADMIN_NOT_FOUND);
+        }
+    }
 }

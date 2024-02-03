@@ -13,6 +13,14 @@ public class ContinuousRecord {
     private Integer count;
     private Date record_date;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Integer getUser_id() {
         return user_id;
     }

@@ -1,9 +1,9 @@
 package com.me.budgetbackend.mapper;
 
 import com.me.budgetbackend.entity.Administrator;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+
+import java.util.List;
 
 @Mapper
 public interface AdministratorMapper {
@@ -15,4 +15,17 @@ public interface AdministratorMapper {
 
     @Insert("insert into administrators (username, password, email, avatar, created_at) VALUES (#{username}, #{password}, #{email}, #{avatar}, #{created_at})")
     public void insert(Administrator admin);
+
+    @Select("select * from administrators")
+    public List<Administrator> selectAll();
+
+    @Delete("delete from administrators where username = #{username}")
+    public void deleteByUsername(String username);
+
+    @Delete("delete from administrators where id = #{id}")
+    public void deleteById(Integer id);
+
+    @Update("update administrators set username = #{username}, email = #{email}, root = #{root} where id = #{id}")
+    public void updateAdmin(String username, String email, Boolean root, Integer id);
+
 }

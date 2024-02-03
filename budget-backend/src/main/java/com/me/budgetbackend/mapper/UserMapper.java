@@ -37,4 +37,13 @@ public interface UserMapper {
     //更新用户的total_budget值
     @Update("update users set total_budget = #{total_budget} where username = #{username}")
     public void updateTotalBudgetByUsername(Integer total_budget, String username);
+
+    @Delete("delete from users where id = #{id}")
+    public void deleteById(Integer id);
+
+    @Update("update users set username = #{username}, email = #{email} where id = #{id}")
+    public void updateUsernameAndEmailById(String username, String email, Integer id);
+
+    @Select("select count(*) from users where date(created_at) = curdate()")
+    public Integer selectTodayRegisterCount();
 }

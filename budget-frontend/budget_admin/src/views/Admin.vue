@@ -113,10 +113,7 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="管理员类型">
-              <el-switch
-                v-model="editFormData.root"
-                active-color="#13ce66"
-              >
+              <el-switch v-model="editFormData.root" active-color="#13ce66">
               </el-switch>
             </el-form-item>
           </el-form>
@@ -132,7 +129,7 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
-import Avatar from "@/components/Avatar.vue"; 
+import Avatar from "@/components/Avatar.vue";
 export default {
   name: "Admin",
   components: {
@@ -170,15 +167,24 @@ export default {
     };
   },
   created() {
-    // this.currentRoot = this.$store.state.user.root;
-    if(!this.currentRoot)
-    {
-      this.$notify({
-        title: '警告',
-        message: '您不是超级管理员，无法进行修改和删除操作',
-        type: 'warning'
-      });
-    }
+    this.$http.get("/admin/adminRequest").then((res) => {
+      console.log("adminRequest: ", res);
+      if (res.data.code === 20000) {
+        this.tableData = res.data.data.admins;
+        this.filteredByDateData = this.tableData;
+        this.currentRoot = res.data.data.isRoot;
+        console.log("currentRoot: ", this.currentRoot);
+        if (!this.currentRoot) {
+          this.$notify({
+            title: "警告",
+            message: "您不是超级管理员，无法进行修改和删除操作",
+            type: "warning",
+          });
+        }
+      } else {
+        this.$message.error(res.data.message);
+      }
+    });
   },
   computed: {
     filteredData() {
@@ -218,21 +224,20 @@ export default {
     // 处理删除操作
     handleDelete() {
       this.tableData.splice(this.deleteIndex, 1);
-      // 这里可以添加与服务器的交互逻辑
-      //   this.$http
-      //     .delete("/user/budget", {
-      //       data: {
-      //         id: this.deleteRow.id,
-      //       },
-      //     })
-      //     .then((res) => {
-      //       console.log("删除预算：", res);
-      //       if (res.data.code === 20000) {
-      //         this.$message.success("删除成功");
-      //       } else {
-      //         this.$message.error(res.data.message);
-      //       }
-      //     });
+      this.$http
+        .delete("/admin/admin", {
+          data: {
+            id: this.deleteRow.id,
+          },
+        })
+        .then((res) => {
+          console.log("删除管理员：", res);
+          if (res.data.code === 20000) {
+            this.$message.success("删除成功");
+          } else {
+            this.$message.error(res.data.message);
+          }
+        });
       console.log(`删除了行: ${this.deleteRow.name}`);
       this.resetDeleteConfirmation();
       //   this.$store.commit("setBudgets", this.tableData);
@@ -260,7 +265,14 @@ export default {
       }
       this.editDialogVisible = false; // 关闭对话框
       console.log("更新数据", this.editFormData);
-      // 可选：重置表单或发送更新到服务器
+      this.$http.post("/admin/admin", this.editFormData).then((res) => {
+        console.log("更新用户：", res);
+        if (res.data.code === 20000) {
+          this.$message.success("更新成功");
+        } else {
+          this.$message.error(res.data.message);
+        }
+      });
       this.resetEditForm();
     },
 
