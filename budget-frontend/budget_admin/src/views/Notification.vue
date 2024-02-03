@@ -42,10 +42,10 @@
 
         <el-table :data="filteredData" style="width: 100%">
           <!-- 数据列 -->
-          <el-table-column prop="id" label="Id" width="120"></el-table-column>
+          <el-table-column prop="id" label="ID" width="120"></el-table-column>
           <el-table-column
             prop="user_id"
-            label="用户Id"
+            label="用户ID"
             width="150"
           ></el-table-column>
           <el-table-column
@@ -54,6 +54,10 @@
             width="120"
           ></el-table-column>
           <el-table-column prop="is_read" label="消息状态" width="100">
+            <template slot-scope="scope">
+              <el-tag v-if="scope.row.is_read" type="success">已读</el-tag>
+              <el-tag v-else>未读</el-tag>
+            </template>
           </el-table-column>
           <el-table-column
             prop="created_at"

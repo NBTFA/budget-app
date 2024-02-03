@@ -34,7 +34,7 @@
 
         <el-table :data="filteredData" style="width: 100%">
           <!-- 数据列 -->
-          <el-table-column prop="id" label="Id" width="120"></el-table-column>
+          <el-table-column prop="id" label="ID" width="120"></el-table-column>
           <el-table-column
             prop="username"
             label="用户名"
@@ -92,7 +92,7 @@
           @close="resetEditForm"
         >
           <el-form :model="editFormData">
-            <el-form-item label="Id">
+            <el-form-item label="ID">
               <el-input v-model="editFormData.id" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="用户名">
