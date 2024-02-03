@@ -3,6 +3,7 @@
     <!-- 顶部导航 -->
     <el-header>
       <i class="fa-solid fa-circle-dollar-to-slot">预算保镖 - 管理员界面</i>
+      <avatar></avatar>
     </el-header>
 
     <!-- 侧边栏和内容区域 -->
@@ -13,7 +14,10 @@
       <el-main>
         <el-row :gutter="40" class="panel-group">
           <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="cursor-pointer" @click.native="changeData('newUsers')">
+            <el-card
+              class="cursor-pointer"
+              @click.native="changeData('newUsers')"
+            >
               <div slot="header">
                 <i class="fa-solid fa-user-plus"></i>
               </div>
@@ -34,7 +38,10 @@
             </el-card>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="cursor-pointer" @click.native="changeData('totalUsers')">
+            <el-card
+              class="cursor-pointer"
+              @click.native="changeData('totalUsers')"
+            >
               <div slot="header">
                 <i class="fa-solid fa-users"></i>
               </div>
@@ -55,7 +62,10 @@
             </el-card>
           </el-col>
           <el-col :xs="12" :sm="12" :lg="6">
-            <el-card class="cursor-pointer" @click.native="changeData('budgetRecords')">
+            <el-card
+              class="cursor-pointer"
+              @click.native="changeData('budgetRecords')"
+            >
               <div slot="header">
                 <i class="fa-solid fa-money-check-dollar"></i>
               </div>
@@ -90,12 +100,14 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import LineChart from "@/components/HomePage/LineChart.vue";
 import SideBar from "@/components/SideBar.vue";
+import Avatar from "@/components/Avatar.vue"; 
 
 export default {
   name: "Home",
   components: {
     SideBar,
     LineChart,
+    Avatar,
   },
   data() {
     return {
@@ -136,5 +148,6 @@ export default {
 .cursor-pointer {
   cursor: pointer;
 }
+
 </style>
     

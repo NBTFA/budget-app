@@ -3,6 +3,7 @@
     <!-- 顶部导航 -->
     <el-header>
       <i class="fa-solid fa-circle-dollar-to-slot">预算保镖 - 管理员界面</i>
+      <avatar></avatar>
     </el-header>
 
     <!-- 侧边栏和内容区域 -->
@@ -126,10 +127,12 @@
 
 <script>
 import SideBar from "@/components/SideBar.vue";
+import Avatar from "@/components/Avatar.vue";
 export default {
   name: "User",
   components: {
     SideBar,
+    Avatar,
   },
   data() {
     return {
