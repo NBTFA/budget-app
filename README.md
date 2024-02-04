@@ -75,6 +75,106 @@ mvn spring-boot:run
 ```java
 mvn clean package
 ```
+## 数据库
+```sql
+CREATE DATABASE IF NOT EXISTS Budget;
+USE Budget;
+DROP TABLE IF EXISTS Administrators CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE IF EXISTS TodoLists CASCADE;
+DROP TABLE IF EXISTS Notifications CASCADE;
+DROP TABLE IF EXISTS ContinuousRecords CASCADE;
+DROP TABLE IF EXISTS BudgetRecords CASCADE;
+DROP TABLE IF EXISTS TodoListRecords CASCADE;
+DROP TABLE IF EXISTS Categories CASCADE;
+DROP TABLE IF EXISTS ServerStats CASCADE;
+CREATE TABLE ServerStats (
+                             id INT AUTO_INCREMENT PRIMARY KEY,
+                             date DATE NOT NULL,
+                             new_users INT DEFAULT 0,
+                             total_users INT DEFAULT 0,
+                             total_records INT DEFAULT 0
+);
+CREATE TABLE Administrators (
+                               id INT AUTO_INCREMENT PRIMARY KEY,
+                               username VARCHAR(255) UNIQUE NOT NULL,
+                               password VARCHAR(255) NOT NULL,
+                               email VARCHAR(255) UNIQUE NOT NULL,
+                               avatar VARCHAR(255),
+                               created_at DATE,
+                                root BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE TABLE Users (
+                       id INT AUTO_INCREMENT PRIMARY KEY,
+                       username VARCHAR(255) UNIQUE NOT NULL,
+                       password VARCHAR(255) NOT NULL,
+                       email VARCHAR(255) UNIQUE NOT NULL,
+                    avatar VARCHAR(255),
+                    created_at DATE,
+                   total_budget INT NOT NULL DEFAULT 0,
+                     used_budget INT NOT NULL DEFAULT 0
+);
+CREATE TABLE TodoLists (
+                           id INT AUTO_INCREMENT PRIMARY KEY,
+                           user_id INT,
+                           description TEXT,
+                           completed BOOLEAN NOT NULL DEFAULT FALSE,
+                           completed_date DATE,
+                           FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+CREATE TABLE Notifications (
+                               id INT AUTO_INCREMENT PRIMARY KEY,
+                               user_id INT,
+                               message TEXT,
+                               is_read BOOLEAN NOT NULL DEFAULT FALSE,
+                                 created_at DATE NOT NULL,
+                               from_user_name varchar(255),
+                               FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+CREATE TABLE ContinuousRecords (
+                                   id INT AUTO_INCREMENT PRIMARY KEY,
+                                   user_id INT,
+                                   record_date DATE NOT NULL,
+                                   count INT NOT NULL,
+                                   FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+CREATE TABLE BudgetRecords (
+                               id INT AUTO_INCREMENT PRIMARY KEY,
+                               user_id INT,
+                               record_date DATE NOT NULL,
+                               name VARCHAR(255) NOT NULL,
+                                 amount INT NOT NULL,
+                                description VARCHAR(255),
+                                category VARCHAR(255),
+                                gain BOOLEAN NOT NULL DEFAULT FALSE,
+                                tags VARCHAR(255),
+                               FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+CREATE TABLE TodoListRecords (
+                                 id INT AUTO_INCREMENT PRIMARY KEY,
+                                 user_id INT,
+                                 created_Date DATE NOT NULL,
+                                 completed_Date DATE,
+                                 completed BOOLEAN NOT NULL DEFAULT FALSE,
+                                    description varchar(255),
+                                title varchar(255),
+                                 FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+CREATE TABLE Categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    category varchar(255),
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);
+select * from Administrators;
+select * from users;
+select * from ContinuousRecords;
+select * from BudgetRecords;
+select * from TodoListRecords;
+select * from Notifications;
+select * from Categories;
+select * from ServerStats;
+```
 
 ## 前端结构
 
@@ -199,3 +299,104 @@ src
 | 添加预算 | POST | /user/budget | BudgetRecord对象的JSON，Authorization头信息 | Result对象 | 添加预算记录 |
 | 删除预算 | DELETE | /user/budget | BudgetRecord对象的JSON，Authorization头信息 | Result对象 | 删除指定的预算记录 |
 | 分页查询用户 | GET | /user/findByPage | 无需请求参数 | IPage | 分页查询用户信息，返回分页结果 |
+
+## 数据库结构
+
+### Administrators
+
+| 字段名      | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| ----------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id          | INT              | 是   | 否   | 是     |        |      | 管理员ID             |
+| username    | VARCHAR(255)     |      | 是   | 是     |        |      | 管理员用户名         |
+| password    | VARCHAR(255)     |      |      | 是     |        |      | 密码哈希值           |
+| email       | VARCHAR(255)     |      | 是   | 是     |        |      | 管理员邮箱           |
+| avatar      | VARCHAR(255)     |      |      |        |        |      | 管理员头像路径       |
+| created_at  | DATE             |      |      |        |        |      | 创建日期             |
+| root        | BOOLEAN          |      |      | 是     | FALSE  |      | 是否为根管理员       |
+
+### Users
+
+| 字段名        | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| ------------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id            | INT              | 是   | 否   | 是     |        |      | 用户ID               |
+| username      | VARCHAR(255)     |      | 是   | 是     |        |      | 用户名               |
+| password      | VARCHAR(255)     |      |      | 是     |        |      | 密码哈希值           |
+| email         | VARCHAR(255)     |      | 是   | 是     |        |      | 用户邮箱             |
+| avatar        | VARCHAR(255)     |      |      |        |        |      | 用户头像路径         |
+| created_at    | DATE             |      |      |        |        |      | 创建日期             |
+| total_budget  | INT              |      |      | 是     | 0      |      | 总预算               |
+| used_budget   | INT              |      |      | 是     | 0      |      | 已用预算             |
+
+### TodoLists
+
+| 字段名         | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| -------------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id             | INT              | 是   | 否   | 是     |        |      | 待办事项列表ID       |
+| user_id        | INT              |      |      | 是     |        | 是   | 关联的用户ID         |
+| description    | TEXT             |      |      |        |        |      | 事项描述             |
+| completed      | BOOLEAN          |      |      | 是     | FALSE  |      | 是否已完成           |
+| completed_date | DATE             |      |      |        |        |      | 完成日期             |
+
+### Notifications
+
+| 字段名          | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| --------------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id              | INT              | 是   | 否   | 是     |        |      | 通知ID               |
+| user_id         | INT              |      |      | 是     |        | 是   | 关联的用户ID         |
+| message         | TEXT             |      |      |        |        |      | 通知消息             |
+| is_read         | BOOLEAN          |      |      | 是     | FALSE  |      | 是否已读             |
+| created_at      | DATE             |      |      | 是     |        |      | 创建日期             |
+| from_user_name  | VARCHAR(255)     |      |      |        |        |      | 发送者用户名         |
+
+### ContinuousRecords
+
+| 字段名      | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| ----------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id          | INT              | 是   | 否   | 是     |        |      | 连续记录ID           |
+| user_id     | INT              |      |      | 是     |        | 是   | 关联的用户ID         |
+| record_date | DATE             |      |      | 是     |        |      | 记录日期             |
+| count       | INT              |      |      | 是     |        |      | 记录数量             |
+
+### BudgetRecords
+
+| 字段名      | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| ----------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id          | INT              | 是   | 否   | 是     |        |      | 预算记录ID           |
+| user_id     | INT              |      |      | 是     |        | 是   | 关联的用户ID         |
+| record_date | DATE             |      |      | 是     |        |      | 记录日期             |
+| name        | VARCHAR(255)     |      |      | 是     |        |      | 记录名称             |
+| amount      | INT              |      |      | 是     |        |      | 记录金额             |
+| description | VARCHAR(255)     |      |      |        |        |      | 记录描述             |
+| category    | VARCHAR(255)     |      |      |        |        |      | 记录类别             |
+| gain        | BOOLEAN          |      |      | 是     | FALSE  |      | 是否为收入记录       |
+| tags        | VARCHAR(255)     |      |      |        |        |      | 记录标签             |
+
+### TodoListRecords
+
+| 字段名         | 数据类型         | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述                 |
+| -------------- | ---------------- | ---- | ---- | ------ | ------ | ---- | -------------------- |
+| id             | INT              | 是   | 否   | 是     |        |      | 待办事项记录ID       |
+| user_id        | INT              |      |      | 是     |        | 是   | 关联的用户ID         |
+| created_Date   | DATE             |      |      | 是     |        |      | 记录创建日期         |
+| completed_Date | DATE             |      |      |        |        |      | 记录完成日期         |
+| completed      | BOOLEAN          |      |      | 是     | FALSE  |      | 是否已完成           |
+| description    | VARCHAR(255)     |      |      |        |        |      | 记录描述             |
+| title          | VARCHAR(255)     |      |      |        |        |      | 记录标题             |
+
+### Categories
+
+| 字段名    | 数据类型     | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述             |
+| --------- | ------------ | ---- | ---- | ------ | ------ | ---- | ---------------- |
+| id        | INT          | 是   | 否   | 是     |        |      | 类别ID           |
+| user_id   | INT          |      |      | 是     |        | 是   | 关联的用户ID     |
+| category  | VARCHAR(255) |      |      |        |        |      | 记录类别         |
+
+### ServerStats
+
+| 字段名      | 数据类型 | 主键 | 唯一 | 不为空 | 默认值 | 外键 | 描述           |
+| ----------- | -------- | ---- | ---- | ------ | ------ | ---- | -------------- |
+| id          | INT      | 是   | 否   | 是     |        |      | 服务器统计ID   |
+| date        | DATE     |      |      | 是     |        |      | 统计日期       |
+| new_users   | INT      |      |      | 是     | 0      |      | 新用户数量     |
+| total_users | INT      |      |      | 是     | 0      |      | 总用户数量     |
+| total_records | INT    |      |      | 是     | 0      |      | 总记录数量     |
