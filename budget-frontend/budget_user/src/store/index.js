@@ -23,8 +23,12 @@ const store = new Vuex.Store({
     totalBudget: 0,
     pieChartData: [],
     progress: 0,
+    userName: '',
   },
   mutations: {
+    SET_USER_NAME(state, userName) {
+      state.userName = userName;
+    },
     CLEAR_NOTIFICATION_NUM(state) {
       state.notificationNum = 0;
     },
@@ -84,6 +88,9 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    setUserName({ commit }, userName) {
+      commit('SET_USER_NAME', userName);
+    },
     clearNotificationNum({ commit }) {
       commit('CLEAR_NOTIFICATION_NUM');
     },

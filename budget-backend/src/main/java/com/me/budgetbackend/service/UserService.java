@@ -246,4 +246,8 @@ public class UserService {
             throw new UserNotFoundException("未找到用户");
         budgetRecordMapper.deleteById(id);
     }
+
+    public String getUserName(String token) {
+        return JwtUtils.getClaimsByToken(token).getSubject();
+    }
 }

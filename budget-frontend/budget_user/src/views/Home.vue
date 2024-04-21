@@ -149,6 +149,8 @@ export default {
         store.dispatch("setPieChartData", res.data.data.pieChartData);
         store.dispatch("setBudgets", res.data.data.budgetList);
         store.dispatch("setProgress", res.data.data.progress);
+        store.dispatch("setUserName", res.data.data.username);
+        console.log("store.state.username: ", store.state.userName);
         if (store.state.totalBudget === -1) {
           this.showBudgetDialog = true;
         }

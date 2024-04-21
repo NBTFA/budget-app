@@ -128,8 +128,11 @@ public class UserController {
             return Result.error(ResultCode.GET_BUDGET_LIST_FAILED);
         }
 
-            int progress = userService.getProgress(token);
-            result.data("progress", progress);
+        int progress = userService.getProgress(token);
+        result.data("progress", progress);
+
+        String userName = userService.getUserName(token);
+        result.data("username", userName);
 
         return result;
     }

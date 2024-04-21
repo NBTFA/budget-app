@@ -3,6 +3,7 @@
       <el-menu-item index="1" @click="onClickMainMenu">首页</el-menu-item>
       <el-menu-item index="2" @click="onClickTodoList">待办事项</el-menu-item>
       <el-menu-item index="3" @click="onClickHistory">消费记录</el-menu-item>
+      <el-menu-item index="4" @click="onClickChatRoom">聊天室</el-menu-item>
       <!-- <el-menu-item index="5" @click="onClickReport">个人报告</el-menu-item> -->
     <!-- 其他菜单项 -->
     <div class="menu-right">
@@ -62,6 +63,10 @@ export default {
     onClickReport() {
       if (this.$route.path === "/report") return;
       this.$router.push("/report");
+    },
+    onClickChatRoom() {
+      if (this.$route.path === "/chat") return;
+      this.$router.push("/chat");
     },
     handleCommand(command) {
       if (command === 'logout') {

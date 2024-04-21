@@ -8,6 +8,7 @@ import History from "../views/History.vue";
 import Rank from "../views/Rank.vue";
 import Report from "../views/Report.vue";
 import Setting from "../views/Setting.vue";
+import Chat from "../views/Chat.vue";
 import store from "@/store";
 // import 组件 from 路径 ../components/组件.vue
 
@@ -31,6 +32,10 @@ const routes = new VueRouter({
         {
             path: '/home',
             component: Home,
+        },
+        {
+            path: '/chat',
+            component: Chat,
         },
         {
             path: '/todo',
