@@ -6,14 +6,26 @@
             <navigator></navigator>
         </el-header>
 
-        <!-- 侧边栏和内容区域 -->
+        <!-- 主内容区域，使用Flex布局 -->
         <el-container>
-            <!-- 侧边栏 -->
-            <!-- 主内容区 -->
+            <!-- 群组列表区，放在左侧 -->
+            <el-aside width="200px">
+                <div class="group-list">
+                    <h3>所有群组</h3>
+                    <ul>
+                        <li v-for="group in groups" :key="group.id" @click="selectGroup(group)"
+                            :class="{ 'active-group': group.id === currentGroupId }">
+                            {{ group.name + "(" + group.peopleNum + ")" }}
+                        </li>
+                    </ul>
+                </div>
+            </el-aside>
+
+            <!-- 聊天室内容区，使用Flex布局以保持发送区在底部 -->
             <el-main>
                 <div class="chatroom">
                     <!-- 消息显示区 -->
-                    <el-scrollbar wrap-class="scrollbar-wrapper">
+                    <div class="scrollbar-wrapper">
                         <div class="message-container">
                             <div v-for="msg in messages" :key="msg.id" class="message"
                                 :class="{ 'my-message': msg.isMine }">
@@ -21,7 +33,7 @@
                                 <div class="message-content">{{ msg.content }}</div>
                             </div>
                         </div>
-                    </el-scrollbar>
+                    </div>
 
                     <!-- 消息发送区 -->
                     <div class="send-message">
@@ -34,12 +46,12 @@
         </el-container>
     </el-container>
 </template>
-
+  
 <script>
 import { Client } from '@stomp/stompjs';
 import Navigator from "@/components/Navigator.vue";
 import SideBar from "@/components/SideBar.vue";
-import store from '@/store/index.js'
+import store from '@/store/index.js';
 
 export default {
     components: {
@@ -50,29 +62,48 @@ export default {
         return {
             client: null,
             messages: [],
-            newMessage: ''
+            newMessage: '',
+            groups: [
+                { id: 1, name: "Group One", peopleNum: 10 },
+                { id: 2, name: "Group Two", peopleNum: 20 }
+            ],
+            currentGroupId: 1
         };
     },
     mounted() {
         this.connect();
+        console.log("currentGroupId: ", this.currentGroupId);
     },
     methods: {
+        getGroups() {
+            this.$http.get("/chat/groups").then((res) => {
+                console.log("getGroups: ", res);
+                if (res.data.code === 20000) {
+                    this.groups = res.data.data.groups;
+                    this.currentGroupId = this.groups[0].id;
+                    this.selectGroup(this.groups[0]);
+                } else {
+                    this.$message.error(res.data.message);
+                }
+            });
+        },
         connect() {
             this.client = new Client({
-                brokerURL: 'ws://localhost:8088/ws', // 修改为你的WebSocket端点
+                brokerURL: 'ws://localhost:8088/ws',
                 onConnect: () => {
-                    this.client.subscribe('/topic/messages', (message) => {
+                    this.client.subscribe('/topic/messages/' + this.currentGroupId, (message) => {
+                        console.log("connect() - message: ", message.body);
+                        console.log("connect() - currentGroupId: ", this.currentGroupId);
                         const msg = JSON.parse(message.body);
-                        // 打印msg
-                        console.log(msg);
-                        msg.isMine = false;
-                        if (msg.user === store.state.userName) {
+                        msg.isMine = msg.user === store.state.userName;
+                        if(msg.isMine){
                             
                         }
-                        else {
-                            msg.isMine = false;
+                        else
+                        {
                             this.messages.push(msg);
                         }
+                        
                     });
                 },
                 onStompError: (frame) => {
@@ -80,21 +111,33 @@ export default {
                     console.error('Additional details: ' + frame.body);
                 },
             });
+            console.log("connect() - currentGroupId: ", this.currentGroupId);
             this.client.activate();
         },
         sendMessage() {
             if (!this.newMessage.trim()) return;
             const msg = {
-                user: store.state.userName, // 假设的用户名称
+                user: store.state.userName,
                 content: this.newMessage,
                 time: new Date().toLocaleTimeString(),
                 isMine: true
             };
-            // 打印msg
-            console.log(msg);
+            console.log("sendMessage() - currentGroupId: ", this.currentGroupId);
+            this.client.publish({ destination: '/app/chat/'+this.currentGroupId, body: JSON.stringify(msg) });
             this.messages.push(msg);
-            this.client.publish({ destination: '/app/chat', body: JSON.stringify(msg) });
             this.newMessage = '';
+        },
+        selectGroup(group) {
+            this.currentGroupId = group.id;
+            this.messages = [];
+            if (this.client && this.client.connected) {
+                this.client.unsubscribe('/topic/messages/' + this.currentGroupId);
+                this.client.subscribe('/topic/messages/' + group.id, (message) => {
+                    const msg = JSON.parse(message.body);
+                    msg.isMine = msg.user === store.state.userName;
+                    this.messages.push(msg);
+                });
+            }
         }
     },
     beforeDestroy() {
@@ -104,43 +147,27 @@ export default {
     }
 };
 </script>
-
+  
 <style scoped>
-/* 最外层容器设置为Flex布局，方向为垂直 */
-.el-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    /* 全屏高度 */
-}
-
-/* 主内容区也应该是Flex容器，确保消息区和发送区正确布局 */
-.el-main {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    /* 填充剩余空间 */
-    overflow: hidden;
-    /* 避免内容溢出导致滚动 */
-}
-
-/* 主内容区域设置为Flex容器 */
+.el-container,
+.el-main,
 .chatroom {
     display: flex;
     flex-direction: column;
     height: 100%;
-    /* 确保聊天室占满整个主内容区 */
 }
 
-/* 消息显示区域自动填充剩余空间 */
+.el-main {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
 .scrollbar-wrapper {
     flex-grow: 1;
     overflow-y: auto;
     margin-bottom: 10px;
-    /* 为发送消息区域留出空间 */
 }
 
-/* 消息容器和消息样式保持不变 */
 .message-container {
     margin: 10px;
 }
@@ -176,7 +203,6 @@ export default {
     margin-bottom: 5px;
 }
 
-/* 发送消息区域 */
 .send-message {
     display: flex;
     padding: 10px;
@@ -185,4 +211,30 @@ export default {
 .message-input {
     flex: 1;
 }
+
+.group-list {
+    padding: 10px;
+}
+
+.group-list h3 {
+    margin-top: 0;
+}
+
+.group-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.group-list li {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.group-list li:hover,
+.group-list li.active-group {
+    background-color: #f0f0f0;
+}
 </style>
+  

@@ -24,6 +24,7 @@
     "stompjs": "^2.3.3",
     "v-charts": "^1.19.0",
     "vue": "^2.6.14",
+    "vue-perfect-scrollbar": "^0.2.1",
     "vue-router": "^3.6.5",
     "vuex": "^3.6.2"
   },
