@@ -150,7 +150,8 @@ export default {
         store.dispatch("setBudgets", res.data.data.budgetList);
         store.dispatch("setProgress", res.data.data.progress);
         store.dispatch("setUserName", res.data.data.username);
-        console.log("store.state.username: ", store.state.userName);
+        store.dispatch("setUserId", res.data.data.user_id);
+        console.log("store.state.username: ", store.state.user_id);
         if (store.state.totalBudget === -1) {
           this.showBudgetDialog = true;
         }

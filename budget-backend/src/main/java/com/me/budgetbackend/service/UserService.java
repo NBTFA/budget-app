@@ -250,4 +250,12 @@ public class UserService {
     public String getUserName(String token) {
         return JwtUtils.getClaimsByToken(token).getSubject();
     }
+
+    public Long getUserID(String token) {
+        String username = JwtUtils.getClaimsByToken(token).getSubject();
+        User user = userMapper.selectByUsername(username);
+        if(user == null)
+            throw new UserNotFoundException("未找到用户");
+        return user.getId();
+    }
 }

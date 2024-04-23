@@ -131,8 +131,11 @@ public class UserController {
         int progress = userService.getProgress(token);
         result.data("progress", progress);
 
-        String userName = userService.getUserName(token);
-        result.data("username", userName);
+        String username = userService.getUserName(token);
+        result.data("username", username);
+
+        Long user_id = userService.getUserID(token);
+        result.data("user_id", user_id);
 
         return result;
     }

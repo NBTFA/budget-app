@@ -1,7 +1,5 @@
 package com.me.budgetbackend.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,27 +7,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Date;
 
 @Setter
 @Getter
-public class ChatMessage implements Serializable {
-    public Long user_id;
-    public String content;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT")
-    public Date time;
-    public boolean isMine;
-    public int groupID;
-
-    @Override
-    public String toString() {
-        return "ChatMessage{" +
-                "user='" + user_id + '\'' +
-                ", content='" + content + '\'' +
-                ", time=" + time +
-                ", isMine=" + isMine +
-                '}';
-    }
+public class DBInstructor<T> implements Serializable {
+    public String dbName;
+    public T content;
+    public String operation;
 
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

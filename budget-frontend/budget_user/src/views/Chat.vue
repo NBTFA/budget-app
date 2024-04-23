@@ -95,7 +95,7 @@ export default {
                         console.log("connect() - message: ", message.body);
                         console.log("connect() - currentGroupId: ", this.currentGroupId);
                         const msg = JSON.parse(message.body);
-                        msg.isMine = msg.user === store.state.userName;
+                        msg.isMine = msg.user_id === store.state.user_id;
                         if(msg.isMine){
                             
                         }
@@ -117,6 +117,7 @@ export default {
         sendMessage() {
             if (!this.newMessage.trim()) return;
             const msg = {
+                user_id: store.state.user_id,
                 user: store.state.userName,
                 content: this.newMessage,
                 time: new Date().toLocaleTimeString(),
@@ -134,7 +135,7 @@ export default {
                 this.client.unsubscribe('/topic/messages/' + this.currentGroupId);
                 this.client.subscribe('/topic/messages/' + group.id, (message) => {
                     const msg = JSON.parse(message.body);
-                    msg.isMine = msg.user === store.state.userName;
+                    msg.isMine = msg.user_id === store.state.user_id;
                     this.messages.push(msg);
                 });
             }

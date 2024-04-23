@@ -24,8 +24,12 @@ const store = new Vuex.Store({
     pieChartData: [],
     progress: 0,
     userName: '',
+    user_id: -1,
   },
   mutations: {
+    SET_USER_ID(state, user_id) {
+      state.user_id = user_id;
+    },
     SET_USER_NAME(state, userName) {
       state.userName = userName;
     },
@@ -88,6 +92,9 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    setUserId({ commit }, user_id) {
+      commit('SET_USER_ID', user_id);
+    },
     setUserName({ commit }, userName) {
       commit('SET_USER_NAME', userName);
     },
