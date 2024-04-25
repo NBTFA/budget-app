@@ -4,6 +4,7 @@ import com.me.budgetbackend.entity.ChatMessage;
 import com.me.budgetbackend.entity.DBInstructor;
 import com.me.budgetbackend.entity.Group;
 import com.me.budgetbackend.messageQueue.RabbitMQSender;
+import com.me.budgetbackend.service.ChatService;
 import com.me.budgetbackend.utils.Result;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import java.util.List;
 @RestController
 public class ChatController {
     @Autowired
-    private RabbitMQSender rabbitMQSender;
+    private ChatService chatService;
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/messages/{roomId}")
@@ -33,11 +34,7 @@ public class ChatController {
         // 打印message
         logger.info(message.toString());
 
-        DBInstructor<ChatMessage> dbInstructor = new DBInstructor<>();
-        dbInstructor.setDbName("chatMessages");
-        dbInstructor.setOperation("insert");
-        dbInstructor.setContent(message);
-        rabbitMQSender.pushToDBQueue(dbInstructor);
+        chatService.pushToDBQueue(message);
 
         return message; // 将消息广播到订阅了"/topic/messages"的客户端
     }

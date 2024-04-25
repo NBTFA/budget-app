@@ -3,30 +3,20 @@
     <el-form ref="registerForm" :model="registerForm" class="register-form">
       <h1 class="register-title">注册</h1>
       <el-form-item label="用户名" :error="usernameError">
-        <el-input
-          v-model="registerForm.username"
-          placeholder="请输入用户名"
-        ></el-input>
+        <el-input v-model="registerForm.username" placeholder="请输入用户名"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" :error="emailError">
-        <el-input
-          v-model="registerForm.email"
-          placeholder="请输入邮箱"
-        ></el-input>
+        <el-input v-model="registerForm.email" placeholder="请输入邮箱"></el-input>
+        <el-button type="default" @click="sendCode">发送验证码</el-button>
+      </el-form-item>
+      <el-form-item label="验证码">
+        <el-input v-model="registerForm.verifyCode" placeholder="请输入验证码"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input
-          v-model="registerForm.password"
-          type="password"
-          placeholder="请输入密码"
-        ></el-input>
+        <el-input v-model="registerForm.password" type="password" placeholder="请输入密码"></el-input>
       </el-form-item>
       <el-form-item label="确认密码" :error="passwordError">
-        <el-input
-          v-model="registerForm.confirmPassword"
-          type="password"
-          placeholder="请再次输入密码"
-        ></el-input>
+        <el-input v-model="registerForm.confirmPassword" type="password" placeholder="请再次输入密码"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onRegister">注册</el-button>
@@ -44,26 +34,51 @@ export default {
       registerForm: {
         username: "",
         email: "",
+        verifyCode: "",
         password: "",
         confirmPassword: "",
       },
+      verifyRequest: {
+        email: "",
+        code: "",
+      }
     };
   },
   methods: {
+    sendCode() {
+      console.log("邮箱：", this.registerForm.email);
+      this.$http.post("/email/sendCode", this.registerForm.email).then((res) => {
+        console.log("发送验证码结果：", res);
+        if (res.data.code === 20000) {
+          this.$message.success("验证码发送成功");
+        } else {
+          this.$message.error(res.data.data.message);
+        }
+      });
+    },
     onRegister() {
       console.log("注册信息：", this.registerForm);
-      // 这里可以添加注册逻辑
-      this.$http.post("/user/register", this.registerForm).then((res) => {
-        console.log("注册结果：", res);
+      this.verifyRequest.email = this.registerForm.email;
+      this.verifyRequest.code = this.registerForm.verifyCode;
+      this.$http.post("/user/verifyEmail", this.verifyRequest).then((res) => {
+        console.log("验证邮箱结果：", res);
         if (res.data.code === 20000) {
-          this.$message.success("注册成功");
-          if (res.data.data.token) {
-            localStorage.setItem("token", res.data.data.token);
-            this.$store.commit("setToken", res.data.data.token);
-          }
-          this.$router.push("/home");
+          this.$message.success("邮箱验证成功");
+          this.$http.post("/user/register", this.registerForm).then((res) => {
+            console.log("注册结果：", res);
+            if (res.data.code === 20000) {
+              this.$message.success("注册成功");
+              if (res.data.data.token) {
+                localStorage.setItem("token", res.data.data.token);
+                this.$store.commit("setToken", res.data.data.token);
+              }
+              this.$router.push("/home");
+            } else {
+              this.$message.error(res.data.message);
+            }
+          });
         } else {
-          this.$message.error(res.data.message);
+          this.$message.error(res.data.data.message);
         }
       });
     },

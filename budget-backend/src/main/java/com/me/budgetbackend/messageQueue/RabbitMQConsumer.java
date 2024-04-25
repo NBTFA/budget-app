@@ -16,7 +16,6 @@ public class RabbitMQConsumer {
     @RabbitListener(queues = "queue_db")
     public void processDBMessage(byte[] dbInstructor) {
         DBInstructor<ChatMessage> dbInstructor1 = SerializationUtils.deserialize(dbInstructor);
-        String tableName = dbInstructor1.getDbName();
         String operation = dbInstructor1.getOperation();
         ChatMessageDAO chatMessageDAO = new ChatMessageDAO(dbInstructor1.getContent());
         if (operation.equals("insert")) {

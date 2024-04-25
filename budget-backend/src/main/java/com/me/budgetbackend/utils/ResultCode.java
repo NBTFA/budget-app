@@ -22,4 +22,5 @@ public interface ResultCode {
     public static Integer SET_BUDGET_INFO_FAILED = 50001;
     public static Integer DELETE_TODO_LIST_FAILED = 40001;
     public static Integer Set_TODO_LIST_FAILED = 50002;
+    public static Integer VERIFY_EMAIL_FAILED = 60001;
 }

@@ -52,6 +52,19 @@ public class UserController {
         return Result.ok().data("token", token);
     }
 
+    @PostMapping("/verifyEmail")
+    public Result verifyEmail(@RequestBody VerifyRequest verifyRequest)
+    {
+        try {
+            if(userService.verifyEmail(verifyRequest))
+                return Result.ok();
+            else
+                return Result.error(ResultCode.VERIFY_EMAIL_FAILED);
+        } catch (UserNotFoundException e) {
+            return Result.error(ResultCode.USER_NOT_FOUND);
+        }
+    }
+
     @PostMapping("/initialize")
     public Result setBudgetInfo(@RequestHeader("Authorization") String token,
                                 @RequestBody InitializeBudgetRequest initializeBudgetRequest)

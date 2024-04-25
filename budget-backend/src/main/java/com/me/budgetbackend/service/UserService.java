@@ -1,12 +1,15 @@
 package com.me.budgetbackend.service;
 
+import com.me.budgetbackend.controller.ChatController;
 import com.me.budgetbackend.entity.*;
 import com.me.budgetbackend.exceptions.UserAlreadyExistException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.*;
 import com.me.budgetbackend.utils.JwtUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +30,9 @@ public class UserService {
     private BudgetRecordMapper budgetRecordMapper;
     @Autowired
     private CategoryMapper categoryMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
     public void login(User user) {
         User user1 = userMapper.login(user);
         if(user1 == null)
@@ -257,5 +263,19 @@ public class UserService {
         if(user == null)
             throw new UserNotFoundException("未找到用户");
         return user.getId();
+    }
+
+    public boolean verifyEmail(VerifyRequest verifyRequest) {
+        String emailKey = "email_code_"+verifyRequest.getEmail();
+        logger.info("code: "+verifyRequest.getCode());
+        logger.info("emailKey: "+emailKey);
+        String codeInRedis = (String) redisTemplate.opsForValue().get(emailKey);
+        logger.info("code: "+verifyRequest.getCode());
+        logger.info("codeInRedis: "+codeInRedis);
+        if(codeInRedis == null)
+            return false;
+        logger.info("code: "+verifyRequest.getCode());
+        logger.info("codeInRedis: "+codeInRedis);
+        return verifyRequest.getCode().equals(codeInRedis);
     }
 }
