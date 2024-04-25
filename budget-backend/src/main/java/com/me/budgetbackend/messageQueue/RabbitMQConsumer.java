@@ -6,6 +6,7 @@ import com.me.budgetbackend.entity.ChatMessage;
 import com.me.budgetbackend.entity.ChatMessageDAO;
 import com.me.budgetbackend.entity.DBInstructor;
 import com.me.budgetbackend.mapper.ChatMessageMapper;
+import com.me.budgetbackend.utils.ChatMessageUtils;
 import com.me.budgetbackend.utils.SerializationUtils;
 import com.me.budgetbackend.utils.URLDecoderUtils;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class RabbitMQConsumer {
     public void processDBMessage(byte[] dbInstructor) {
         DBInstructor<ChatMessage> dbInstructor1 = SerializationUtils.deserialize(dbInstructor);
         String operation = dbInstructor1.getOperation();
-        ChatMessageDAO chatMessageDAO = new ChatMessageDAO(dbInstructor1.getContent());
+        ChatMessageDAO chatMessageDAO = ChatMessageUtils.convertToChatMessageDAO(dbInstructor1.getContent());
         if (operation.equals("insert")) {
             chatMessageMapper.insert(chatMessageDAO);
         }

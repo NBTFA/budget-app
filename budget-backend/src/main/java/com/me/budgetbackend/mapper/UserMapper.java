@@ -46,4 +46,7 @@ public interface UserMapper {
 
     @Select("select count(*) from users where date(created_at) = curdate()")
     public Integer selectTodayRegisterCount();
+
+    @Select("select username from users where id = #{id}")
+    public String selectUsernameById(Long id);
 }

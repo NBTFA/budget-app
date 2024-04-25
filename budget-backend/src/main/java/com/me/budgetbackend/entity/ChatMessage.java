@@ -15,11 +15,12 @@ import java.util.Date;
 @Getter
 public class ChatMessage implements Serializable {
     public Long user_id;
+    public String user;
     public String content;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "GMT")
-    public Date time;
+    public String time;
     public boolean isMine;
-    public int groupID;
+    public Long group_id;
+
 
     @Override
     public String toString() {

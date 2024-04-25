@@ -6,6 +6,7 @@ import com.me.budgetbackend.entity.Group;
 import com.me.budgetbackend.messageQueue.RabbitMQSender;
 import com.me.budgetbackend.service.ChatService;
 import com.me.budgetbackend.utils.Result;
+import com.me.budgetbackend.utils.ResultCode;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -43,5 +41,16 @@ public class ChatController {
     public Result getGroups(@RequestHeader("Authorization") String token)
     {
         return null;
+    }
+
+    @GetMapping("/chat/messages/{roomId}")
+    public Result getMessages(@RequestHeader("Authorization") String token,
+                              @PathVariable Long roomId)
+    {
+            Result result = Result.ok();
+            logger.info("Get messages from room " + roomId);
+            List<ChatMessage> chatMessages = chatService.getMessages(roomId);
+            result.data("messages", chatMessages);
+            return result;
     }
 }

@@ -67,14 +67,25 @@ export default {
                 { id: 1, name: "Group One", peopleNum: 10 },
                 { id: 2, name: "Group Two", peopleNum: 20 }
             ],
-            currentGroupId: 1
+            currentGroupId: 0
         };
     },
     mounted() {
         this.connect();
+        this.loadHistoryMessage();
         console.log("currentGroupId: ", this.currentGroupId);
     },
     methods: {
+        loadHistoryMessage() {
+            this.$http.get("/chat/messages/" + this.currentGroupId).then((res) => {
+                console.log("loadHistoryMessage: ", res);
+                if (res.data.code === 20000) {
+                    this.messages = res.data.data.messages;
+                } else {
+                    this.$message.error(res.data.message);
+                }
+            });
+        },
         getGroups() {
             this.$http.get("/chat/groups").then((res) => {
                 console.log("getGroups: ", res);
@@ -121,9 +132,10 @@ export default {
                 user: store.state.userName,
                 content: this.newMessage,
                 time: new Date().toLocaleTimeString(),
-                isMine: true
+                isMine: true,
+                group_id: this.currentGroupId
             };
-            console.log("sendMessage() - currentGroupId: ", this.currentGroupId);
+            console.log("sendMessage() - currentGroupId: ", msg.group_id);
             this.client.publish({ destination: '/app/chat/'+this.currentGroupId, body: JSON.stringify(msg) });
             this.messages.push(msg);
             this.newMessage = '';

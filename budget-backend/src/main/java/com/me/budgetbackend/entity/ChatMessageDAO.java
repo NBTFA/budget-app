@@ -4,26 +4,34 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.*;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
+@Table(name = "ChatMessages")
 public class ChatMessageDAO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-    public Long user_id;
-    public String content;
-    public Date time;
-    public int group_id;
+    private Long id;
+    @Column(name = "user_id")
+    private Long user_id;
+    @Column(name = "content")
+    private String content;
+    private String time;
+    @Column(name = "group_id")
+    private Long group_id;
 
-    public ChatMessageDAO(ChatMessage chatMessage) {
-        this.user_id = chatMessage.getUser_id();
-        this.content = chatMessage.getContent();
-        this.time = chatMessage.getTime();
-        this.group_id = chatMessage.getGroupID();
+    @Override
+    public String toString() {
+        return "ChatMessageDAO{" +
+                "id=" + id +
+                ", user_id=" + user_id +
+                ", content='" + content + '\'' +
+                ", time=" + time +
+                ", group_id=" + group_id +
+                '}';
     }
 }
