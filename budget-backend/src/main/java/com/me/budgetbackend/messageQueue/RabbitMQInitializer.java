@@ -18,10 +18,12 @@ public class RabbitMQInitializer {
         Channel channel = connection.createChannel();
 
         String queueName_1 = "queue_db";
+        String queueName_2 = "queue_email";
 
-        String exchangeName = "DB_exchange_direct";
+        String exchangeName = "exchange_direct";
 
         String key_1 = "database";
+        String key_2 = "email";
 
         /**
          * 创建交换机
@@ -42,6 +44,7 @@ public class RabbitMQInitializer {
          * 5. 队列结构化信息, 比如声明死信队列, 磁盘队列会用到
          */
         channel.queueDeclare(queueName_1, true, false, false, null);
+        channel.queueDeclare(queueName_2, true, false, false, null);
 
         /**
          * 绑定交换机和队列
@@ -50,6 +53,7 @@ public class RabbitMQInitializer {
          * 3. routing key, 直连模式下是队列名称
          */
         channel.queueBind(queueName_1, exchangeName, key_1);
+        channel.queueBind(queueName_2, exchangeName, key_2);
 
         channel.close();
         connection.close();

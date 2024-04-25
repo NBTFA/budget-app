@@ -14,6 +14,10 @@ public class RabbitMQSender {
     private RabbitTemplate rabbitTemplate;
 
     public void pushToDBQueue(DBInstructor<ChatMessage> dbInstructor) throws IOException {
-        rabbitTemplate.convertAndSend("DB_exchange_direct", "database", dbInstructor.toByteArray());
+        rabbitTemplate.convertAndSend("exchange_direct", "database", dbInstructor.toByteArray());
+    }
+
+    public void pushToEmailQueue(String email) {
+        rabbitTemplate.convertAndSend("exchange_direct", "email", email);
     }
 }
