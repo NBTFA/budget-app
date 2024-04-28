@@ -32,6 +32,8 @@ public class UserService {
     private CategoryMapper categoryMapper;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private RankService rankService;
     private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
     public void login(User user) {
         User user1 = userMapper.login(user);
@@ -41,22 +43,30 @@ public class UserService {
         Date date = new Date();
         java.sql.Date now = new java.sql.Date(date.getTime());
         //获取用户的上次登录时间
-        java.sql.Date last_login = continuousRecordMapper.selectRecordDateByUserId(user1.getId());
+        java.sql.Date last_login = (java.sql.Date) redisTemplate.opsForValue().get(user1.getUsername());
+        if (last_login == null){
+            java.sql.Date date1 = continuousRecordMapper.selectRecordDateByUserId(user1.getId());
+            int count = continuousRecordMapper.selectCountByUserId(user1.getId());
+            if(date1 != null)
+                last_login = date1;
+            rankService.updateLastLogin(user1.getUsername(), last_login);
+            rankService.updateRank(user1.getUsername(), count);
+        }
         long daysBetween = java.time.temporal.ChronoUnit.DAYS.between(last_login.toLocalDate(), now.toLocalDate());
         Logger logger = org.slf4j.LoggerFactory.getLogger(UserService.class);
         logger.info("相差："+String.valueOf(daysBetween)+"天");
         //如果上次登录时间是昨天，那么连续登录天数加一
         if(last_login != null && daysBetween==1)
         {
-            continuousRecordMapper.updateCountByUserId(continuousRecordMapper.selectCountByUserId(user1.getId()) + 1, user1.getId());
+            rankService.updateRank(user1.getUsername(), 1);
         }
         //否则连续登录天数置为1
         else if(last_login != null && daysBetween>1)
         {
-            continuousRecordMapper.updateCountByUserId(1, user1.getId());
+            rankService.setRank(user1.getUsername(), 1);
         }
         //更新用户的上次登录时间
-        continuousRecordMapper.updateRecordDateByUserId(now, user1.getId());
+        rankService.updateLastLogin(user1.getUsername(), now);
     }
 
     public void register(User user)

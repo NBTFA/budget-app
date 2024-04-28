@@ -8,6 +8,7 @@ import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.ContinuousRecordMapper;
 import com.me.budgetbackend.mapper.UserMapper;
 import com.me.budgetbackend.mapper.UserMapper_plus;
+import com.me.budgetbackend.service.RankService;
 import com.me.budgetbackend.service.UserService;
 import com.me.budgetbackend.utils.JwtUtils;
 import com.me.budgetbackend.utils.Result;
@@ -27,6 +28,8 @@ public class UserController {
     private UserMapper_plus userMapperPlus;
     @Autowired
     private UserService userService;
+    @Autowired
+    private RankService rankService;
 
     @PostMapping("/login")
     public Result login(@RequestBody User user)
@@ -107,7 +110,8 @@ public class UserController {
         }
 
         try {
-            List<RankUser> rankUsers = userService.getRankList(token);
+
+            List<RankUser> rankUsers = rankService.getRankUsers();
             result.data("rankUsers", rankUsers);
         } catch (Exception e) {
             return Result.error(ResultCode.GET_RANK_USERS_FAILED);

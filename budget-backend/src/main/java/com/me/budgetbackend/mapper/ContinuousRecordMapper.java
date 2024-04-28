@@ -32,4 +32,7 @@ public interface ContinuousRecordMapper {
     @Result(column = "record_date", property = "record_date")
     @Select("select * from ContinuousRecords")
     public List<ContinuousRecord> selectAll();
+
+    @Select("select count from ContinuousRecords where user_id = (select id from users where username = #{username})")
+    public void updateCountByUsername(String username, int rank);
 }

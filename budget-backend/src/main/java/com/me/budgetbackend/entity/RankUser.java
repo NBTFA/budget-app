@@ -23,6 +23,10 @@ public class RankUser {
         this.rank = rank;
     }
 
+    public RankUser() {
+
+    }
+
     public Long getId() {
         return id;
     }
