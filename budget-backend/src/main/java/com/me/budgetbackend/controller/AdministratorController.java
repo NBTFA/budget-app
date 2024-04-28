@@ -145,7 +145,7 @@ public class AdministratorController {
             return Result.ok();
         } catch (IOException | UserNotFoundException | AdminNotFoundException e) {
             return Result.error(ResultCode.ADMIN_NOT_FOUND);
-        } 
+        }
     }
 
     @PostMapping("/sendToAll")
