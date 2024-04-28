@@ -41,7 +41,7 @@
             if(res.data.data.token) {
               localStorage.setItem('token', res.data.data.token);
               this.$store.commit('setToken', res.data.data.token);
-              this.$store.commit('setUsername', this.loginForm.username);
+              this.$store.commit('setUserName', this.loginForm.username);
             }
             this.$router.push('/home');
           } else {

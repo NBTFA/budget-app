@@ -80,7 +80,10 @@ export default {
             this.$http.get("/chat/messages/" + this.currentGroupId).then((res) => {
                 console.log("loadHistoryMessage: ", res);
                 if (res.data.code === 20000) {
-                    this.messages = res.data.data.messages;
+                    this.messages = res.data.data.messages.map(msg => ({
+                        ...msg,
+                        isMine: msg.user_id === store.state.user_id // 如果消息的用户ID与当前用户ID相同，则将isMine设置为true
+                    }));
                 } else {
                     this.$message.error(res.data.message);
                 }
@@ -106,15 +109,9 @@ export default {
                         console.log("connect() - message: ", message.body);
                         console.log("connect() - currentGroupId: ", this.currentGroupId);
                         const msg = JSON.parse(message.body);
+                        // 如果是自己发送的消息，则将ismine设置为true
                         msg.isMine = msg.user_id === store.state.user_id;
-                        if(msg.isMine){
-                            
-                        }
-                        else
-                        {
-                            this.messages.push(msg);
-                        }
-                        
+                        this.messages.push(msg);
                     });
                 },
                 onStompError: (frame) => {
@@ -136,8 +133,7 @@ export default {
                 group_id: this.currentGroupId
             };
             console.log("sendMessage() - currentGroupId: ", msg.group_id);
-            this.client.publish({ destination: '/app/chat/'+this.currentGroupId, body: JSON.stringify(msg) });
-            this.messages.push(msg);
+            this.client.publish({ destination: '/app/chat/' + this.currentGroupId, body: JSON.stringify(msg) });
             this.newMessage = '';
         },
         selectGroup(group) {

@@ -5,7 +5,9 @@ import com.me.budgetbackend.controller.ChatController;
 import com.me.budgetbackend.entity.ChatMessage;
 import com.me.budgetbackend.entity.ChatMessageDAO;
 import com.me.budgetbackend.entity.DBInstructor;
+import com.me.budgetbackend.entity.Notification;
 import com.me.budgetbackend.mapper.ChatMessageMapper;
+import com.me.budgetbackend.mapper.NotificationMapper;
 import com.me.budgetbackend.utils.ChatMessageUtils;
 import com.me.budgetbackend.utils.SerializationUtils;
 import com.me.budgetbackend.utils.URLDecoderUtils;
@@ -25,17 +27,38 @@ public class RabbitMQConsumer {
     @Autowired
     private ChatMessageMapper chatMessageMapper;
     @Autowired
+    private NotificationMapper notificationMapper;
+    @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private RedisTemplate redisTemplate;
-    private static final Logger logger = LoggerFactory.getLogger(ChatController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RabbitMQConsumer.class);
     @RabbitListener(queues = "queue_db")
     public void processDBMessage(byte[] dbInstructor) {
-        DBInstructor<ChatMessage> dbInstructor1 = SerializationUtils.deserialize(dbInstructor);
-        String operation = dbInstructor1.getOperation();
-        ChatMessageDAO chatMessageDAO = ChatMessageUtils.convertToChatMessageDAO(dbInstructor1.getContent());
+        DBInstructor<?> dbInstructor1 = SerializationUtils.deserialize(dbInstructor);
+        String dbName = dbInstructor1.getDbName();
+        if (dbName.equals("chatMessages")) {
+            processChatMessage(dbInstructor1);
+        }
+        else if (dbName.equals("Notifications")) {
+            processNotificationMessage(dbInstructor1);
+        }
+    }
+
+    private void processChatMessage(DBInstructor<?> dbInstructor) {
+        String operation = dbInstructor.getOperation();
+        ChatMessageDAO chatMessageDAO = ChatMessageUtils.convertToChatMessageDAO((ChatMessage) dbInstructor.getContent());
         if (operation.equals("insert")) {
             chatMessageMapper.insert(chatMessageDAO);
+        }
+    }
+
+    private void processNotificationMessage(DBInstructor<?> dbInstructor) {
+        String operation = dbInstructor.getOperation();
+        Notification notification = (Notification) dbInstructor.getContent();
+        logger.info(notification.getMessage());
+        if (operation.equals("insert")) {
+            notificationMapper.insert(notification);
         }
     }
 

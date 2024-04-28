@@ -4,14 +4,19 @@ import com.me.budgetbackend.entity.*;
 import com.me.budgetbackend.exceptions.AdminAlreadyExistException;
 import com.me.budgetbackend.exceptions.AdminNotFoundException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
+import com.me.budgetbackend.messageQueue.RabbitMQConsumer;
 import com.me.budgetbackend.service.AdministratorService;
 import com.me.budgetbackend.utils.JwtUtils;
 import com.me.budgetbackend.utils.Result;
 import com.me.budgetbackend.utils.ResultCode;
+import com.me.budgetbackend.utils.URLDecoderUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,6 +24,7 @@ import java.util.List;
 public class AdministratorController {
     @Autowired
     private AdministratorService administratorService;
+    private static final Logger logger = LoggerFactory.getLogger(AdministratorController.class);
 
     @PostMapping("/login")
     public Result login(@RequestBody Administrator admin)
@@ -137,20 +143,20 @@ public class AdministratorController {
         try {
             administratorService.sendToUser(token, request);
             return Result.ok();
-        } catch (AdminNotFoundException e) {
+        } catch (IOException | UserNotFoundException | AdminNotFoundException e) {
             return Result.error(ResultCode.ADMIN_NOT_FOUND);
-        } catch (UserNotFoundException e) {
-            return Result.error(ResultCode.USER_NOT_FOUND);
-        }
+        } 
     }
 
     @PostMapping("/sendToAll")
     public Result sendToAll(@RequestHeader("Authorization") String token, @RequestBody String message)
     {
         try {
-            administratorService.sendToAll(token, message);
+            message = URLDecoderUtils.decode(message);
+            logger.info("Send to all: " + message);
+            administratorService.sendToAll(token, message.substring(0, message.length()-1));
             return Result.ok();
-        } catch (AdminNotFoundException e) {
+        } catch (AdminNotFoundException | IOException e) {
             return Result.error(ResultCode.ADMIN_NOT_FOUND);
         }
     }

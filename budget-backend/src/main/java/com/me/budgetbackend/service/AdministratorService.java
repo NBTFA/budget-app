@@ -1,15 +1,19 @@
 package com.me.budgetbackend.service;
 
+import com.me.budgetbackend.controller.ChatController;
 import com.me.budgetbackend.entity.*;
 import com.me.budgetbackend.exceptions.AdminAlreadyExistException;
 import com.me.budgetbackend.exceptions.AdminNotFoundException;
 import com.me.budgetbackend.exceptions.UserNotFoundException;
 import com.me.budgetbackend.mapper.*;
+import com.me.budgetbackend.messageQueue.RabbitMQSender;
 import com.me.budgetbackend.utils.JwtUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,6 +36,9 @@ public class AdministratorService {
     private ContinuousRecordMapper continuousRecordMapper;
     @Autowired
     private TodoListRecordMapper todoListRecordMapper;
+    @Autowired
+    private RabbitMQSender rabbitMQSender;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AdministratorService.class);
 
     public void login(Administrator admin) {
         Administrator admin1 = administratorMapper.login(admin);
@@ -162,7 +169,7 @@ public class AdministratorService {
         administratorMapper.updateAdmin(admin.getUsername(), admin.getEmail(), admin.getRoot(), admin.getId().intValue());
     }
 
-    public void sendToUser(String token, SendToUserRequest request) {
+    public void sendToUser(String token, SendToUserRequest request) throws IOException {
         String username = JwtUtils.getClaimsByToken(token).getSubject();
         Administrator admin1 = administratorMapper.selectByUsername(username);
         if(admin1 == null)
@@ -173,10 +180,15 @@ public class AdministratorService {
         notification.setIs_read(false);
         notification.setMessage(request.getMessage());
         notification.setUser_id(request.getUser_id().intValue());
-        notificationMapper.insert(notification);
+
+        DBInstructor<Notification> dbInstructor = new DBInstructor<>();
+        dbInstructor.setDbName("Notifications");
+        dbInstructor.setOperation("insert");
+        dbInstructor.setContent(notification);
+        rabbitMQSender.pushToDBQueue(dbInstructor);
     }
 
-    public void sendToAll(String token, String message) {
+    public void sendToAll(String token, String message) throws IOException {
         String username = JwtUtils.getClaimsByToken(token).getSubject();
         Administrator admin1 = administratorMapper.selectByUsername(username);
         if(admin1 == null)
@@ -189,7 +201,15 @@ public class AdministratorService {
             notification.setIs_read(false);
             notification.setMessage(message);
             notification.setUser_id(user.getId().intValue());
-            notificationMapper.insert(notification);
+            logger.info("message: "+message);
+            logger.info("notification: "+notification.getMessage());
+
+            DBInstructor<Notification> dbInstructor = new DBInstructor<>();
+            dbInstructor.setDbName("Notifications");
+            dbInstructor.setOperation("insert");
+            dbInstructor.setContent(notification);
+            logger.info("dbInstructor: "+dbInstructor.getContent().getMessage());
+            rabbitMQSender.pushToDBQueue(dbInstructor);
         }
     }
 
